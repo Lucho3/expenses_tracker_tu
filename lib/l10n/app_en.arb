@@ -1,0 +1,30 @@
+{
+    "appTitle": "Expense Tracker",
+    "@appTitle": {
+      "description": "The title for the application"
+    },
+    "menu": "Menu",
+    "@drawerSecond": {
+      "description": "Menu for the drawer menu"
+    },
+    "drawerFirst": "Expenses",
+    "@drawerFirst": {
+      "description": "The first option of the drawer menu"
+    },
+    "drawerSecond": "Incomes",
+    "@drawerSecond": {
+      "description": "The second option of the drawer menu"
+    },
+    "language": "Language",
+    "@language": {
+      "description": "The language of the app"
+    },
+    "darkMode": "Dark Mode",
+    "@darkMode": {
+      "description": "Dark mode title"
+    },
+    "settings": "Settings",
+    "@settings": {
+      "description": "settings field title"
+    }
+  }
