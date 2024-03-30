@@ -1,4 +1,4 @@
-
+import 'package:expenses_tracker_tu/widgets/floating_action_button.dart';
 import 'package:expenses_tracker_tu/widgets/main_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -23,6 +23,7 @@ class MainFrame extends StatelessWidget {
       ),
       drawer: MainDrawer(),
       body: content,
+      floatingActionButton: CustomFAB(),
     );
   }
 }

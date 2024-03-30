@@ -1,10 +1,13 @@
 {
-  "appTitle": "Бюджетен разпределител",
+  "appTitle": "Бюджетен Разпределител",
   "menu": "Меню",
   "drawerFirst": "Разходи",
   "drawerSecond": "Приходи",
   "language": "Език",
-  "darkMode": "Тъмен режим",
-  "settings": "Настройки"
+  "darkMode": "Тъмен Режим",
+  "settings": "Настройки",
+  "expense": "Разход",
+  "income": "Приход",
+  "trMoney": "Прехвърляне на Средства"
 
 }

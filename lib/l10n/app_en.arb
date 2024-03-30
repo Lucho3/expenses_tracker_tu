@@ -26,5 +26,17 @@
     "settings": "Settings",
     "@settings": {
       "description": "settings field title"
+    },
+    "expense": "Expense",
+    "@expense": {
+      "description": "Label for the FAB"
+    },
+    "income": "Income",
+    "@income": {
+      "description": "Label for the FAB"
+    },
+    "trMoney": "Transfer Money",
+    "@trMoney": {
+      "description": "Label for the FAB"
     }
   }
