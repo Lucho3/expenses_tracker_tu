@@ -1,11 +1,12 @@
 import 'package:expenses_tracker_tu/widgets/floating_action_button.dart';
 import 'package:expenses_tracker_tu/widgets/main_drawer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class MainFrame extends StatelessWidget {
-  const MainFrame({super.key, required this.content});
-
+  const MainFrame({super.key, required this.content, required this.title});
+  
+  final String title;
   final Widget content;
 
   @override
@@ -13,7 +14,7 @@ class MainFrame extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context)!.appTitle,
+          title,
           style: Theme.of(context).textTheme.titleLarge!.copyWith(
                 color: Theme.of(context).colorScheme.onBackground,
                 fontWeight: FontWeight.bold,

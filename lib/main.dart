@@ -1,12 +1,12 @@
 import 'package:expenses_tracker_tu/l10n/l10n.dart';
 import 'package:expenses_tracker_tu/providers/settings_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:expenses_tracker_tu/screens/overview.dart';
 import 'package:expenses_tracker_tu/widgets/main_frame.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 ThemeData createTheme(bool isDark) {
   return ThemeData(
@@ -15,6 +15,11 @@ ThemeData createTheme(bool isDark) {
       brightness: isDark ? Brightness.dark : Brightness.light,
       seedColor: Color.fromARGB(255, 117, 5, 173),
     ),
+    cardTheme: const CardTheme().copyWith(
+        margin: const EdgeInsets.symmetric(
+      horizontal: 16,
+      vertical: 6,
+    )),
     textTheme: GoogleFonts.latoTextTheme(),
   );
 }
@@ -42,8 +47,13 @@ class App extends ConsumerWidget {
         supportedLocales: L10n.all,
         locale: Locale(settings['isEnglish']! ? 'en' : 'bg'),
         theme: createTheme(settings['isDarkMode']!),
-        home: const MainFrame(
-          content: OverviewScreen(),
+        home: Builder(
+          builder: (context) {
+            return MainFrame(
+              title: AppLocalizations.of(context)!.appTitle,
+              content: const OverviewScreen(),
+            );
+          },
         ));
   }
 }

@@ -1,6 +1,7 @@
 {
   "appTitle": "Бюджетен Разпределител",
   "menu": "Меню",
+  "drawerZero": "Главен Екран",
   "drawerFirst": "Разходи",
   "drawerSecond": "Приходи",
   "language": "Език",

@@ -7,6 +7,10 @@
     "@drawerSecond": {
       "description": "Menu for the drawer menu"
     },
+    "drawerZero": "Home",
+    "@drawerZero": {
+      "description": "The home screen of the app"
+    },
     "drawerFirst": "Expenses",
     "@drawerFirst": {
       "description": "The first option of the drawer menu"

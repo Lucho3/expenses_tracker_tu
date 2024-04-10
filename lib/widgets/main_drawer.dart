@@ -1,9 +1,31 @@
+import 'package:expenses_tracker_tu/screens/items_screen.dart';
+import 'package:expenses_tracker_tu/screens/overview.dart';
+import 'package:expenses_tracker_tu/widgets/main_frame.dart';
 import 'package:expenses_tracker_tu/widgets/settings_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer({super.key});
+
+  void onOpenItem(BuildContext context, bool isExpense) {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => Items(isExpense: isExpense),
+      ),
+    );
+  }
+
+  void openMainScreen(BuildContext context) {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => MainFrame(
+              title: AppLocalizations.of(context)!.appTitle,
+              content: const OverviewScreen(),
+            ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,20 +62,19 @@ class MainDrawer extends StatelessWidget {
           ),
           ListTile(
               leading: Icon(
-                Icons.money_off,
+                Icons.home,
                 size: 24,
                 color: Theme.of(context).colorScheme.onBackground,
               ),
               title: Text(
-                AppLocalizations.of(context)!.drawerFirst,
+                AppLocalizations.of(context)!.drawerZero,
                 style: Theme.of(context).textTheme.titleSmall!.copyWith(
                       color: Theme.of(context).colorScheme.onBackground,
                       fontSize: 20,
                     ),
               ),
               onTap: () {
-                {}
-                ;
+                openMainScreen(context);
               }),
           ListTile(
               leading: Icon(
@@ -68,7 +89,25 @@ class MainDrawer extends StatelessWidget {
                       fontSize: 20,
                     ),
               ),
-              onTap: () {}),
+              onTap: () {
+                onOpenItem(context, false);
+              }),
+          ListTile(
+              leading: Icon(
+                Icons.money_off,
+                size: 24,
+                color: Theme.of(context).colorScheme.onBackground,
+              ),
+              title: Text(
+                AppLocalizations.of(context)!.drawerFirst,
+                style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                      color: Theme.of(context).colorScheme.onBackground,
+                      fontSize: 20,
+                    ),
+              ),
+              onTap: () {
+                onOpenItem(context, true);
+              }),
           const Spacer(),
           SettingsContainer()
         ],
