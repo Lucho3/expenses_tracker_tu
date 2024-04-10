@@ -43,7 +43,7 @@ class MainDrawer extends StatelessWidget {
             child: Row(
               children: [
                 Icon(
-                  Icons.fastfood,
+                  Icons.cases_rounded,
                   size: 48,
                   color: Theme.of(context).colorScheme.primary,
                 ),

@@ -1,46 +1,118 @@
 {
-    "appTitle": "Expense Tracker",
-    "@appTitle": {
-      "description": "The title for the application"
-    },
-    "menu": "Menu",
-    "@drawerSecond": {
-      "description": "Menu for the drawer menu"
-    },
-    "drawerZero": "Home",
-    "@drawerZero": {
-      "description": "The home screen of the app"
-    },
-    "drawerFirst": "Expenses",
-    "@drawerFirst": {
-      "description": "The first option of the drawer menu"
-    },
-    "drawerSecond": "Incomes",
-    "@drawerSecond": {
-      "description": "The second option of the drawer menu"
-    },
-    "language": "Language",
-    "@language": {
-      "description": "The language of the app"
-    },
-    "darkMode": "Dark Mode",
-    "@darkMode": {
-      "description": "Dark mode title"
-    },
-    "settings": "Settings",
-    "@settings": {
-      "description": "settings field title"
-    },
-    "expense": "Expense",
-    "@expense": {
-      "description": "Label for the FAB"
-    },
-    "income": "Income",
-    "@income": {
-      "description": "Label for the FAB"
-    },
-    "trMoney": "Transfer Money",
-    "@trMoney": {
-      "description": "Label for the FAB"
-    }
+  "appTitle": "Expense Tracker",
+  "@appTitle": {
+    "description": "The title for the application"
+  },
+  "menu": "Menu",
+  "@drawerSecond": {
+    "description": "Menu for the drawer menu"
+  },
+  "drawerZero": "Home",
+  "@drawerZero": {
+    "description": "The home screen of the app"
+  },
+  "drawerFirst": "Expenses",
+  "@drawerFirst": {
+    "description": "The first option of the drawer menu"
+  },
+  "drawerSecond": "Incomes",
+  "@drawerSecond": {
+    "description": "The second option of the drawer menu"
+  },
+  "language": "Language",
+  "@language": {
+    "description": "The language of the app"
+  },
+  "darkMode": "Dark Mode",
+  "@darkMode": {
+    "description": "Dark mode title"
+  },
+  "settings": "Settings",
+  "@settings": {
+    "description": "settings field title"
+  },
+  "expense": "Expense",
+  "@expense": {
+    "description": "Label for the FAB"
+  },
+  "income": "Income",
+  "@income": {
+    "description": "Label for the FAB"
+  },
+  "trMoney": "Transfer Money",
+  "@trMoney": {
+    "description": "Label for the FAB"
+  },
+  "noElements": "No Elements Found!",
+  "@noElements": {
+    "description": "Label for the FAB"
+  },
+  "elementDel": "Element Deleted!",
+  "@elementDel": {
+    "description": "Label for the FAB"
+  },
+  "undo": "Undo",
+  "@undo": {
+    "description": "Label for the FAB"
+  },
+  "expenseNote": "Expense Note",
+  "@expenseNote": {
+    "description": "Title of the field for expense"
+  },
+  "incomeNote": "Income Note",
+  "@incomeNote": {
+    "description": "Title of the field for income"
+  },
+  "amount": "Amount",
+  "@amount": {
+    "description": "Title of the field for mount"
+  },
+  "noDate": "No Date Selected",
+  "@noDate": {
+    "description": "Title of the field for date"
+  },
+  "save": "Save",
+  "@save": {
+    "description": "Save"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel"
+  },
+  "alertTitle": "Invalid Input",
+  "@alertTitle": {
+    "description": "Title of the dialog when entering wrong information"
+  },
+  "alertContent": "Please, make sure, that the entered content is valid!",
+  "@alertContent": {
+    "description": "Contents for the income enum map"
+  },
+  "food": "FOOD",
+  "@food": {
+    "description": "Contents for the expense enum map"
+  },
+  "travel": "TRAVEL",
+  "@travel": {
+    "description": "Contents for the expense enum map"
+  },
+  "leisure": "LEISURE",
+  "@leisure": {
+    "description": "Contents for the expense enum map"
+  },
+  "work": "WORK",
+  "@work": {
+    "description": "Contents for the expense enum map"
+  },
+  "salary": "SALARY",
+  "@salary": {
+    "description": "Contents for the income enum map"
+  },
+  "side": "SIDE",
+  "@side": {
+    "description": "Contents for the income enum map"
+  },
+  "other": "OTHER",
+  "@other": {
+    "description": "Contents for the income enum map"
   }
+}

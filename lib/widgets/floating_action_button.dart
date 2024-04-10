@@ -1,9 +1,22 @@
+import 'package:expenses_tracker_tu/screens/new_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CustomFAB extends StatelessWidget {
   const CustomFAB({super.key});
+
+  void _openAddItemOverlay(BuildContext context, String type) {
+    showModalBottomSheet(
+      constraints: const BoxConstraints(
+        maxWidth: double.infinity,
+      ),
+      useSafeArea: true,
+      isScrollControlled: true,
+      context: context,
+      builder: (ctx) => NewItem(itemType: type),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +41,9 @@ class CustomFAB extends StatelessWidget {
           ),
           shape: const CircleBorder(),
           backgroundColor: const Color.fromARGB(255, 253, 73, 46),
-          onTap: () {},
+          onTap: () { 
+            _openAddItemOverlay(context, "Expense");
+          },
         ),
         SpeedDialChild(
           child: Icon(
@@ -41,7 +56,9 @@ class CustomFAB extends StatelessWidget {
           ),
           backgroundColor: const Color.fromARGB(255, 30, 151, 8),
           shape: const CircleBorder(),
-          onTap: () {},
+          onTap: () {
+            _openAddItemOverlay(context, "Income");
+          },
         ),
         SpeedDialChild(
           child: Icon(
@@ -54,7 +71,9 @@ class CustomFAB extends StatelessWidget {
           ),
           backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
           shape: const CircleBorder(),
-          onTap: () {},
+          onTap: () {
+
+          },
         )
       ],
     );

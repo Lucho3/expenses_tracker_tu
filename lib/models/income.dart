@@ -2,29 +2,27 @@ import 'package:expenses_tracker_tu/models/item.dart';
 import 'package:expenses_tracker_tu/models/wallet.dart';
 import 'package:flutter/material.dart';
 
-enum CategoryExpense {
-  food,
-  travel,
-  leisure,
-  work,
+enum TypeIncome {
+  salary,
+  side,
+  other,
 }
 
-const categoryIcon = {
-  CategoryExpense.food: Icons.lunch_dining,
-  CategoryExpense.travel: Icons.flight_takeoff,
-  CategoryExpense.leisure: Icons.movie,
-  CategoryExpense.work: Icons.work,
+const typeIcon = {
+  TypeIncome.salary: Icons.money_outlined,
+  TypeIncome.side: Icons.work,
+  TypeIncome.other: Icons.pending_actions_outlined,
 };
 
-class Expense extends ItemModel {
-  final CategoryExpense category;
+class Income extends ItemModel {
+  final TypeIncome type;
 
-  Expense({
+  Income({
     required String title,
     required double amount,
     required DateTime date,
     required Wallet wallet,
-    required this.category,
+    required this.type,
   }) : super(
           title: title,
           amount: amount,
@@ -32,3 +30,6 @@ class Expense extends ItemModel {
           wallet: wallet,
         );
 }
+
+
+
