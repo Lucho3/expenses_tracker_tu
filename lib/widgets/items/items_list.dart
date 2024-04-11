@@ -1,37 +1,23 @@
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:expenses_tracker_tu/models/item.dart';
 import 'package:expenses_tracker_tu/providers/expenses_provider.dart';
 import 'package:expenses_tracker_tu/providers/incomes_provider.dart';
+import 'package:expenses_tracker_tu/providers/item_provider.dart';
 import 'package:expenses_tracker_tu/widgets/items/item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ItemList extends ConsumerWidget {
-  ItemList({super.key, required bool this.isExpense});
-  late List<ItemModel> items;
-  final bool isExpense;
 
-  void _removeExpense(BuildContext context, ItemModel item) {
-    final indexOfRemovedExpense = items.indexOf(item);
-    //trqbva da maham ot notifier
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        duration: const Duration(seconds: 3),
-        content:  Text(AppLocalizations.of(context)!.elementDel),
-        action: SnackBarAction(
-          label: AppLocalizations.of(context)!.undo,
-          onPressed: () {
-              //da advam v notifier
-          },
-        ),
-      ),
-    );
-  }
+class ItemList extends ConsumerWidget {
+  ItemList({super.key, required this.onRemoveItem, required this.provider});
+  
+  NotifierProvider<ItemNotifier<ItemModel>, List<ItemModel>> provider;
+  final void Function(ItemModel item) onRemoveItem;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    items = isExpense ? ref.read(expensesProvider.notifier).expenses :  ref.read(incomesProvider.notifier).incomes;
+    //do with real wallet
+    final items = ref.watch(provider).where((item) => item.wallet.title == "123").toList();
     return ListView.builder(
       // Item count sets the maximum number of return widgets
       itemCount: items.length,
@@ -46,7 +32,7 @@ class ItemList extends ConsumerWidget {
           ),
           key: ValueKey(items[index]),
           //from provider
-          onDismissed: (direction) => _removeExpense(context, items[index], items),
+          onDismissed: (direction) => onRemoveItem(items[index]),
           child: Item(items[index])),
     );
   }

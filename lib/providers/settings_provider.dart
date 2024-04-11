@@ -1,11 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SettingsNotifier extends StateNotifier<Map<String, bool>> {
-  SettingsNotifier()
-      : super({
+class SettingsNotifier extends Notifier<Map<String, bool>> {
+  @override
+  Map<String, bool> build() {
+    return {
           'isEnglish': true,
           'isDarkMode': true,
-        });
+        };
+  }
   
   void setSetting(String setting, bool newState) {
     state = {
@@ -13,8 +15,10 @@ class SettingsNotifier extends StateNotifier<Map<String, bool>> {
       setting: newState,
     };
   }
+  
+
 }
 
 final settingsProvider =
-    StateNotifierProvider<SettingsNotifier, Map<String, bool>>(
-        (ref) => SettingsNotifier());
+    NotifierProvider<SettingsNotifier, Map<String, bool>>(
+        () => SettingsNotifier());

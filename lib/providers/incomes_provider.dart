@@ -1,18 +1,29 @@
 import 'package:expenses_tracker_tu/models/income.dart';
+import 'package:expenses_tracker_tu/providers/item_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class IncomesNotifier extends StateNotifier<List<Income>> {
-  IncomesNotifier() : super([]);
+class IncomesNotifier extends ItemNotifier<Income> {
+  @override
+  List<Income> build() {
+    return [];
+  }
 
-  List<Income> get incomes {
+  @override
+  List<Income> get items {
      return state;
   }
 
-  void addExpense(Income income) {
+  @override
+  void addItem(Income income) {
     state = [...state, income];
+  }
+  
+  @override
+  void deleteItem(Income income) {
+    state = state.where((element) => element!= income).toList();
   }
 }
 
 final incomesProvider =
-    StateNotifierProvider<IncomesNotifier, List<Income>>(
-        (ref) => IncomesNotifier());
+    NotifierProvider<IncomesNotifier, List<Income>>(
+        () => IncomesNotifier());
