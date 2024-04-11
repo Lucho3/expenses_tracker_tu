@@ -7,11 +7,11 @@ const uuid = Uuid();
 
 
 abstract class ItemModel {
-  final String id;
-  final String title;
-  final double amount;
-  final DateTime date;
-  final Wallet wallet;
+  String id;
+  String title;
+  double amount;
+  DateTime date;
+  Wallet wallet;
 
   ItemModel({
     required this.title,

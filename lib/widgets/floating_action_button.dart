@@ -6,7 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class CustomFAB extends StatelessWidget {
   const CustomFAB({super.key});
 
-  void _openAddItemOverlay(BuildContext context, String type) {
+  void _openAddItemOverlay(BuildContext context, bool type) {
     showModalBottomSheet(
       constraints: const BoxConstraints(
         maxWidth: double.infinity,
@@ -14,7 +14,7 @@ class CustomFAB extends StatelessWidget {
       useSafeArea: true,
       isScrollControlled: true,
       context: context,
-      builder: (ctx) => NewItem(itemType: type),
+      builder: (ctx) => NewItem(isExpense: type),
     );
   }
 
@@ -42,7 +42,7 @@ class CustomFAB extends StatelessWidget {
           shape: const CircleBorder(),
           backgroundColor: const Color.fromARGB(255, 253, 73, 46),
           onTap: () { 
-            _openAddItemOverlay(context, "Expense");
+            _openAddItemOverlay(context, true);
           },
         ),
         SpeedDialChild(
@@ -57,7 +57,7 @@ class CustomFAB extends StatelessWidget {
           backgroundColor: const Color.fromARGB(255, 30, 151, 8),
           shape: const CircleBorder(),
           onTap: () {
-            _openAddItemOverlay(context, "Income");
+            _openAddItemOverlay(context, false);
           },
         ),
         SpeedDialChild(

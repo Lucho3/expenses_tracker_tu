@@ -15,7 +15,7 @@ const typeIcon = {
 };
 
 class Income extends ItemModel {
-  final TypeIncome type;
+  TypeIncome type;
 
   Income({
     required String title,

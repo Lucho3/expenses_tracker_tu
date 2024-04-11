@@ -22,6 +22,14 @@ class IncomesNotifier extends ItemNotifier<Income> {
   void deleteItem(Income income) {
     state = state.where((element) => element!= income).toList();
   }
+  
+  @override
+  void editItem(Income item) {
+    final index = state.indexOf(item);
+    if (index != -1) {
+      state = List.from(state)..[index] = item;
+    }
+  }
 }
 
 final incomesProvider =

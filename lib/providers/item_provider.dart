@@ -10,4 +10,7 @@ abstract class ItemNotifier<T extends ItemModel> extends Notifier<List<T>> {
   void addItem(T item);
 
   void deleteItem(T item);
+
+  void editItem(T item);
+
 }

@@ -1,5 +1,3 @@
-import 'package:expenses_tracker_tu/models/expense.dart';
-import 'package:expenses_tracker_tu/models/income.dart';
 import 'package:expenses_tracker_tu/models/item.dart';
 import 'package:expenses_tracker_tu/providers/expenses_provider.dart';
 import 'package:expenses_tracker_tu/providers/incomes_provider.dart';

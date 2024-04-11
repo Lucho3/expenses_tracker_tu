@@ -16,7 +16,7 @@ class ItemList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    //do with real wallet
+    //TODO do with real wallet
     final items = ref.watch(provider).where((item) => item.wallet.title == "123").toList();
     return ListView.builder(
       // Item count sets the maximum number of return widgets

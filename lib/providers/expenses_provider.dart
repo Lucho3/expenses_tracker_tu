@@ -23,6 +23,14 @@ class ExpensesNotifier extends ItemNotifier<Expense> {
   void deleteItem(Expense expense) {
     state = state.where((e) => e!= expense).toList();
   }
+  
+  @override
+  void editItem(Expense item) {
+    final index = state.indexOf(item);
+    if (index != -1) {
+      state = List.from(state)..[index] = item;
+    }
+  }
 }
 
 final expensesProvider =

@@ -15,8 +15,6 @@ class SettingsNotifier extends Notifier<Map<String, bool>> {
       setting: newState,
     };
   }
-  
-
 }
 
 final settingsProvider =

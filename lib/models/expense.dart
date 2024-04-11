@@ -17,7 +17,7 @@ const categoryIcon = {
 };
 
 class Expense extends ItemModel {
-  final CategoryExpense category;
+  CategoryExpense category;
 
   Expense({
     required String title,
