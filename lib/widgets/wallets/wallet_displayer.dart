@@ -1,3 +1,6 @@
+
+import 'package:expenses_tracker_tu/screens/wallets_screen.dart';
+import 'package:expenses_tracker_tu/widgets/wallets/wallets_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:expenses_tracker_tu/providers/wallets_provider.dart';
@@ -13,6 +16,15 @@ class WalletsDisplayer extends ConsumerStatefulWidget {
 }
 
 class _WalletsDisplayerState extends ConsumerState<WalletsDisplayer> {
+
+   void _openWalletsScreen(BuildContext context) {
+     Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => Wallets(),
+      ),
+    );
+  }
+
   Widget buildAccountRow(String label, String value) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
@@ -67,7 +79,7 @@ class _WalletsDisplayerState extends ConsumerState<WalletsDisplayer> {
                 Expanded(
                   flex: 8,
                   child: Text(
-                    AppLocalizations.of(context)!.cWallet,
+                    AppLocalizations.of(context)!.sWallet,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.titleMedium!.copyWith(
                         color: Theme.of(context).colorScheme.primary,
@@ -82,7 +94,7 @@ class _WalletsDisplayerState extends ConsumerState<WalletsDisplayer> {
                       icon: const Icon(Icons.more_vert),
                       color: Theme.of(context).colorScheme.primary,
                       onPressed: () {
-                        // ...
+                        _openWalletsScreen(context);
                       },
                     )),
               ],

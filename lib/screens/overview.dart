@@ -1,4 +1,4 @@
-import 'package:expenses_tracker_tu/widgets/wallets/wallets_displayer.dart';
+import 'package:expenses_tracker_tu/widgets/wallets/wallet_displayer.dart';
 import 'package:flutter/material.dart';
 
 class OverviewScreen extends StatefulWidget{

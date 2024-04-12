@@ -115,12 +115,32 @@
   "@other": {
     "description": "Contents for the income enum map"
   },
-  "cWallet": "Current Wallet",
-  "@cWallet": {
+  "sWallet": "Current Wallet",
+  "@sWallet": {
     "description": "Text for the wallet widget label"
   },
   "walletName": "Wallet Name",
   "@walletName": {
     "description": "Text for the wallet name label"
+  },
+  "allWallets": "All Wallets",
+  "@allWallets": {
+    "description": "Label for the all wallets scrren"
+  },
+  "close": "Close",
+  "@close": {
+    "description": "Label for the close button"
+  },
+  "add": "Add",
+  "@add": {
+    "description": "Label for the add button"
+  },
+  "edit": "Edit",
+  "@edit": {
+    "description": "Label for the edit button"
+  },
+  "walletChanged": "The selected wallet was changed!",
+  "@walletChanged": {
+    "description": "Label for the edit button"
   }
 }
