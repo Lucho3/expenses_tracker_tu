@@ -71,6 +71,7 @@ class _ExpensesState extends ConsumerState<Items> {
       ),
     );
 
+    //TODO: check for current wallet
     if (itemsProvider.isNotEmpty) {
       mainContent = ItemList(
         onRemoveItem: _removeExpense,

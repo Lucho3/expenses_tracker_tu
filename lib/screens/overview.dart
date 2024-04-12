@@ -1,3 +1,4 @@
+import 'package:expenses_tracker_tu/widgets/wallets/wallets_displayer.dart';
 import 'package:flutter/material.dart';
 
 class OverviewScreen extends StatefulWidget{
@@ -15,7 +16,7 @@ class _OverviewScreenState extends State<OverviewScreen>{
   Widget build(BuildContext context) {
     return Column( 
       children: [
-        Text("Overview Screen"),
+        WalletsDisplayer(),
         Text("Overview Screen"),
       ],
     );

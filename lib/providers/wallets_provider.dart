@@ -1,4 +1,3 @@
-import 'package:expenses_tracker_tu/models/income.dart';
 import 'package:expenses_tracker_tu/models/wallet.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

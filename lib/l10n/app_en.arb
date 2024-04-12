@@ -114,5 +114,13 @@
   "other": "OTHER",
   "@other": {
     "description": "Contents for the income enum map"
+  },
+  "cWallet": "Current Wallet",
+  "@cWallet": {
+    "description": "Text for the wallet widget label"
+  },
+  "walletName": "Wallet Name",
+  "@walletName": {
+    "description": "Text for the wallet name label"
   }
 }

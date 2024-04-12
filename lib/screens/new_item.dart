@@ -129,7 +129,7 @@ class _NewExpenseState extends ConsumerState<NewItem> {
             date: _selectedDate!,
             category: _selectedItem as CategoryExpense,
             //TODO: RealWallet
-            wallet: new Wallet(title: "123", amount: 123));
+            wallet: new Wallet(title: "123", amount: 123, isSelected: true));
       } else {
         newItem = Income(
             title: _titleController.text,
@@ -137,7 +137,7 @@ class _NewExpenseState extends ConsumerState<NewItem> {
             date: _selectedDate!,
             type: _selectedItem as TypeIncome,
             //TODO: RealWallet
-            wallet: new Wallet(title: "123", amount: 123));
+            wallet: new Wallet(title: "123", amount: 123, isSelected: true));
       }
       ref.read(provider.notifier).addItem(newItem);
       Navigator.pop(context);
@@ -150,7 +150,7 @@ class _NewExpenseState extends ConsumerState<NewItem> {
       widget.item!.amount = enteredAmount!;
       widget.item!.date = _selectedDate!;
       widget.item!.title = _titleController.text;
-      widget.item!.wallet = new Wallet(title: "123", amount: 123);
+      widget.item!.wallet = new Wallet(title: "123", amount: 123, isSelected: true);
       widget.isExpense
           ? (widget.item as Expense).category = _selectedItem as CategoryExpense
           : (widget.item as Income).type = _selectedItem as TypeIncome;

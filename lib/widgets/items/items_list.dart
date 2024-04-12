@@ -1,7 +1,5 @@
 
 import 'package:expenses_tracker_tu/models/item.dart';
-import 'package:expenses_tracker_tu/providers/expenses_provider.dart';
-import 'package:expenses_tracker_tu/providers/incomes_provider.dart';
 import 'package:expenses_tracker_tu/providers/item_provider.dart';
 import 'package:expenses_tracker_tu/widgets/items/item.dart';
 import 'package:flutter/material.dart';
