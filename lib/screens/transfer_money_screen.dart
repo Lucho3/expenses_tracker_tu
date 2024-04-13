@@ -1,8 +1,5 @@
 import 'package:expenses_tracker_tu/models/wallet.dart';
 import 'package:expenses_tracker_tu/providers/wallets_provider.dart';
-import 'package:expenses_tracker_tu/widgets/wallets/wallet_displayer.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -57,9 +54,10 @@ class _TransferMoneyState extends ConsumerState<TransferMoney> {
 
   DropdownMenu createCustomMenu(String label, bool isValueOne) {
     List<Wallet> customWalletList = walletsList
-        .where((w) => ![selectedWalletOne, selectedWalletTwo].contains(w)).toList();
-    List<DropdownMenuEntry<Wallet?>> entries = customWalletList
-        .map<DropdownMenuEntry<Wallet?>>((Wallet w) {
+        .where((w) => ![selectedWalletOne, selectedWalletTwo].contains(w))
+        .toList();
+    List<DropdownMenuEntry<Wallet?>> entries =
+        customWalletList.map<DropdownMenuEntry<Wallet?>>((Wallet w) {
       return DropdownMenuEntry(
         value: w,
         label: w.title,
@@ -101,13 +99,9 @@ class _TransferMoneyState extends ConsumerState<TransferMoney> {
     return DropdownMenu(
         label: Text(label,
             style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                  color: Theme.of(context).colorScheme.primary,
-                  fontSize: 16
-                )),
+                color: Theme.of(context).colorScheme.primary, fontSize: 16)),
         textStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
-              color: Theme.of(context).colorScheme.primary,
-              fontSize: 16
-            ),
+            color: Theme.of(context).colorScheme.primary, fontSize: 16),
         menuStyle: MenuStyle(
           backgroundColor: MaterialStatePropertyAll<Color>(
               Theme.of(context).colorScheme.primaryContainer),
@@ -130,12 +124,12 @@ class _TransferMoneyState extends ConsumerState<TransferMoney> {
       dialogShower(AppLocalizations.of(context)!.alertTitle,
           AppLocalizations.of(context)!.alertContent);
     }
-    if (selectedWalletOne!.amount<enteredAmount!) {
+    if (selectedWalletOne!.amount < enteredAmount!) {
       dialogShower(AppLocalizations.of(context)!.notEnoughMoneyTitle,
           AppLocalizations.of(context)!.notEnoughMoneyToTransfer);
     }
-    selectedWalletOne!.amount -=enteredAmount;
-    selectedWalletTwo!.amount +=enteredAmount;
+    selectedWalletOne!.amount -= enteredAmount;
+    selectedWalletTwo!.amount += enteredAmount;
     ref.read(walletsProvider.notifier).editItem(selectedWalletOne!);
     ref.read(walletsProvider.notifier).editItem(selectedWalletTwo!);
     ScaffoldMessenger.of(context).clearSnackBars();
@@ -201,6 +195,12 @@ class _TransferMoneyState extends ConsumerState<TransferMoney> {
           ),
         ),
       ),
+      Padding(
+          padding: const EdgeInsets.only(bottom: 4.0, top: 4.0),
+          child: Text(AppLocalizations.of(context)!.transferInstructions,
+              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                  ))),
       Padding(
         padding: EdgeInsets.only(top: 8.0),
         child: Row(

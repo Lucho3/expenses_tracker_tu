@@ -44,6 +44,7 @@ dependencies:
   uuid: ^4.4.0
   provider: ^6.1.2
   dropdown_button2: ^2.3.9
+  syncfusion_flutter_charts: ^25.1.39+1
 
 dev_dependencies:
   flutter_test:

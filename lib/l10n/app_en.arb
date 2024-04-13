@@ -214,6 +214,22 @@
   "transactionCompleted": "Transaction Completed!",
   "@transactionCompleted": {
     "description": "Label for the scaffold when the transaction is completed"
+  },
+  "transferInstructions": "The transfer is from wallet one to wallet two! If there are not enough money you can not transfer!",
+  "@transferInstructions": {
+    "description": "Instructions how the transaction works"
+  },
+  "monthlySummary": "Monthly Summary",
+  "@monthlySummary": {
+    "description": "Summary for the monthly chart"
+  },
+  "total": "Total",
+  "@total": {
+    "description": "The total result for the month label"
+  },
+  "noRecords": "No records found for this month!",
+  "@noRecords": {
+    "description": "No records found for this month label"
   }
 
 }

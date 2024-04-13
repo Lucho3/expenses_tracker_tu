@@ -9,7 +9,6 @@ import 'package:expenses_tracker_tu/widgets/main_frame.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:riverpod/src/notifier.dart';
 
 class Items extends ConsumerStatefulWidget {
   const Items({super.key, required this.isExpense});
@@ -45,6 +44,7 @@ class _ExpensesState extends ConsumerState<Items> {
     final selectedWallet = walletsP.items.where((w) => w.isSelected == true).first;
     selectedWallet.amount -= item.amount;
     
+    //TODO: this undo is problematic if we go to main screen anc click undo it doesnt work
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
