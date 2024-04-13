@@ -139,8 +139,41 @@
   "@edit": {
     "description": "Label for the edit button"
   },
-  "walletChanged": "The selected wallet was changed!",
+  "walletChanged": "The Selected Wallet was Changed!",
   "@walletChanged": {
     "description": "Label for the edit button"
+  },
+  "walletDeleted": "The Wallet was Deleted!",
+  "@walletDeleted": {
+    "description": "Label for the deletion button"
+  },
+  "delete": "Delete",
+  "@delete": {
+    "description": "Label for the delete button"
+  },
+  "deleteTitle": "Confirm Deletion",
+  "@deleteTitle": {
+    "description": "Label for the title of the deletion pop up"
+  },
+  "deleteText": "Are you sure you want to delete this wallet?",
+  "@deleteText": {
+    "description": "Text for the deletion pop up"
+  },
+  "noWallets": "No Wallets Found",
+  "@noWallets": {
+    "description": "Text for the no wallets label"
+  },
+  "noWalletsContent": "No wallets could be found, therefore you can not add item!",
+  "@noWalletsContent": {
+    "description": "Text for the addition alert "
+  },
+  "notEnoughMoney": "Not enough money in the wallet, therefore you can not add such big expense!",
+  "@noWlletsContent": {
+    "description": "Text for the not enough money alert"
+  },
+  "notEnoughMoneyTitle": "Not Enough Money",
+  "@notEnoughMoneyTitle": {
+    "description": "Text for the not enough money alert title"
   }
+
 }

@@ -3,6 +3,7 @@ import 'package:expenses_tracker_tu/providers/expenses_provider.dart';
 import 'package:expenses_tracker_tu/providers/incomes_provider.dart';
 import 'package:expenses_tracker_tu/providers/item_provider.dart';
 import 'package:expenses_tracker_tu/providers/settings_provider.dart';
+import 'package:expenses_tracker_tu/providers/wallets_provider.dart';
 import 'package:expenses_tracker_tu/widgets/items/items_list.dart';
 import 'package:expenses_tracker_tu/widgets/main_frame.dart';
 import 'package:flutter/material.dart';
@@ -38,8 +39,11 @@ class _ExpensesState extends ConsumerState<Items> {
     super.initState();
   }
 
-  void _removeExpense(ItemModel item) {
+  void _removeItem(ItemModel item) {
     ref.read(provider.notifier).deleteItem(item);
+    final walletsP = ref.read(walletsProvider.notifier);
+    final selectedWallet = walletsP.items.where((w) => w.isSelected == true).first;
+    selectedWallet.amount -= item.amount;
     
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
@@ -50,9 +54,11 @@ class _ExpensesState extends ConsumerState<Items> {
             label: AppLocalizations.of(context)!.undo,
             onPressed: () {
               ref.read(provider.notifier).addItem(item);
+              selectedWallet.amount += item.amount;
             }),
       ),
     );
+    walletsP.editItem(selectedWallet);
   }
 
   @override
@@ -74,7 +80,7 @@ class _ExpensesState extends ConsumerState<Items> {
     //TODO: check for current wallet
     if (itemsProvider.isNotEmpty) {
       mainContent = ItemList(
-        onRemoveItem: _removeExpense,
+        onRemoveItem: _removeItem,
         provider: provider,
       );
     }

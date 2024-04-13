@@ -1,6 +1,7 @@
 
 import 'package:expenses_tracker_tu/models/item.dart';
 import 'package:expenses_tracker_tu/providers/item_provider.dart';
+import 'package:expenses_tracker_tu/providers/wallets_provider.dart';
 import 'package:expenses_tracker_tu/widgets/items/item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,7 +16,8 @@ class ItemList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     //TODO do with real wallet
-    final items = ref.watch(provider).where((item) => item.wallet.title == "123").toList();
+    final selectedWallet = ref.read(walletsProvider.notifier).items.where((w) => w.isSelected == true).first;
+    final items = ref.watch(provider).where((item) => item.wallet == selectedWallet).toList();
     return ListView.builder(
       // Item count sets the maximum number of return widgets
       itemCount: items.length,

@@ -1,4 +1,4 @@
-
+import 'package:expenses_tracker_tu/models/wallet.dart';
 import 'package:expenses_tracker_tu/screens/wallets_screen.dart';
 import 'package:expenses_tracker_tu/widgets/wallets/wallets_list.dart';
 import 'package:flutter/material.dart';
@@ -16,9 +16,8 @@ class WalletsDisplayer extends ConsumerStatefulWidget {
 }
 
 class _WalletsDisplayerState extends ConsumerState<WalletsDisplayer> {
-
-   void _openWalletsScreen(BuildContext context) {
-     Navigator.of(context).pushReplacement(
+  void _openWalletsScreen(BuildContext context) {
+    Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => Wallets(),
       ),
@@ -51,6 +50,36 @@ class _WalletsDisplayerState extends ConsumerState<WalletsDisplayer> {
         ),
       ),
     );
+  }
+
+  List<Widget> rowBuilder(List<Wallet> provider ){
+    if(provider.isNotEmpty)
+    {
+    return [
+      buildAccountRow('${AppLocalizations.of(context)!.walletName}:',
+              provider.where((w) => w.isSelected == true).first.title),
+          buildAccountRow(AppLocalizations.of(context)!.amount + ':',
+            '\$${provider.where((w) => w.isSelected == true).first.amount.toStringAsFixed(2)}') 
+            ];
+    }
+    return [Container(
+      padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Row(
+          children: [
+            Text(
+              AppLocalizations.of(context)!.noWallets ,
+              style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                  color: Theme.of(context).colorScheme.onSecondaryContainer,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16),
+            ),
+          ],
+        ),
+      ),
+    )];
+            
   }
 
   @override
@@ -106,16 +135,7 @@ class _WalletsDisplayerState extends ConsumerState<WalletsDisplayer> {
             endIndent: MediaQuery.of(context).size.width * 0.05,
             thickness: 2,
           ),
-          buildAccountRow(
-              AppLocalizations.of(context)!.walletName + ':',
-              ref
-                  .read(walletsProvider.notifier)
-                  .items
-                  .where((w) => w.isSelected == true)
-                  .first
-                  .title),
-          buildAccountRow(AppLocalizations.of(context)!.amount + ':',
-              '\$${ref.read(walletsProvider.notifier).items.where((w) => w.isSelected == true).first.amount.toStringAsFixed(2)}'),
+...rowBuilder(provider)
         ],
       ),
     );

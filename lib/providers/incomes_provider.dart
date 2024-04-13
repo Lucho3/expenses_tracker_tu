@@ -1,4 +1,5 @@
 import 'package:expenses_tracker_tu/models/income.dart';
+import 'package:expenses_tracker_tu/models/wallet.dart';
 import 'package:expenses_tracker_tu/providers/item_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -29,6 +30,12 @@ class IncomesNotifier extends ItemNotifier<Income> {
     if (index != -1) {
       state = List.from(state)..[index] = item;
     }
+  }
+
+  @override
+  void removeAllItemsWithWallet(Wallet wallet) {
+    state.removeWhere((item) => item.wallet == wallet);
+    state = [...state];
   }
 }
 

@@ -3,6 +3,7 @@ import 'package:expenses_tracker_tu/models/wallet.dart';
 import 'package:expenses_tracker_tu/providers/expenses_provider.dart';
 import 'package:expenses_tracker_tu/providers/incomes_provider.dart';
 import 'package:expenses_tracker_tu/providers/item_provider.dart';
+import 'package:expenses_tracker_tu/providers/wallets_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:expenses_tracker_tu/models/expense.dart';
 import 'package:expenses_tracker_tu/models/item.dart';
@@ -86,61 +87,89 @@ class _NewExpenseState extends ConsumerState<NewItem> {
         : (widget.item as Income).type;
   }
 
+  void dialogShower(String l1, String l2) {
+    showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+              title: Text(l1,
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                      )),
+              content: Text(
+                l2,
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                textAlign: TextAlign.center,
+              ),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(ctx);
+                    },
+                    child: const Text('OK'))
+              ],
+            ));
+  }
+
   bool evaluateInput(double? enteredAmount) {
     final isAmountInvalid = enteredAmount == null || enteredAmount <= 0;
     if (_titleController.text.trim().isEmpty ||
         isAmountInvalid ||
         _selectedDate == null) {
-      showDialog(
-          context: context,
-          builder: (ctx) => AlertDialog(
-                title: Text(AppLocalizations.of(context)!.alertTitle,
-                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                        )),
-                content: Text(
-                  AppLocalizations.of(context)!.alertContent,
-                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                  textAlign: TextAlign.center,
-                ),
-                actions: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pop(ctx);
-                      },
-                      child: const Text('OK'))
-                ],
-              ));
+      dialogShower(AppLocalizations.of(context)!.alertTitle,
+          AppLocalizations.of(context)!.alertContent);
       return false;
     }
     return true;
   }
 
-  void _submitItemData() {
+  bool addItem(WalletsNotifier walletsP) {
     final enteredAmount = double.tryParse(_amountController.text);
+    Wallet selectedWallet =
+        walletsP.items.where((w) => w.isSelected == true).first;
+
     if (evaluateInput(enteredAmount)) {
       final ItemModel newItem;
       if (widget.isExpense) {
-        newItem = Expense(
-            title: _titleController.text,
-            amount: enteredAmount!,
-            date: _selectedDate!,
-            category: _selectedItem as CategoryExpense,
-            //TODO: RealWallet
-            wallet: new Wallet(title: "123", amount: 123, isSelected: true));
+        if (selectedWallet.amount >= enteredAmount!) {
+          newItem = Expense(
+              title: _titleController.text,
+              amount: enteredAmount!,
+              date: _selectedDate!,
+              category: _selectedItem as CategoryExpense,
+              wallet: selectedWallet);
+          selectedWallet.amount -= enteredAmount;
+        } else {
+          dialogShower(AppLocalizations.of(context)!.notEnoughMoneyTitle,
+              AppLocalizations.of(context)!.notEnoughMoney);
+          return false;
+        }
       } else {
         newItem = Income(
             title: _titleController.text,
             amount: enteredAmount!,
             date: _selectedDate!,
             type: _selectedItem as TypeIncome,
-            //TODO: RealWallet
-            wallet: new Wallet(title: "123", amount: 123, isSelected: true));
+            wallet: selectedWallet);
+        selectedWallet.amount += enteredAmount;
       }
+      walletsP.editItem(selectedWallet);
       ref.read(provider.notifier).addItem(newItem);
-      Navigator.pop(context);
+      return true;
+    }
+    return false;
+  }
+
+  void _submitItemData() {
+    final walletsP = ref.watch(walletsProvider.notifier);
+    if (walletsP.items.isNotEmpty) {
+      if (addItem(walletsP)) {
+        Navigator.pop(context);
+      }
+    } else {
+      dialogShower(AppLocalizations.of(context)!.noWallets,
+          AppLocalizations.of(context)!.noWalletsContent);
     }
   }
 
@@ -150,7 +179,6 @@ class _NewExpenseState extends ConsumerState<NewItem> {
       widget.item!.amount = enteredAmount!;
       widget.item!.date = _selectedDate!;
       widget.item!.title = _titleController.text;
-      widget.item!.wallet = new Wallet(title: "123", amount: 123, isSelected: true);
       widget.isExpense
           ? (widget.item as Expense).category = _selectedItem as CategoryExpense
           : (widget.item as Income).type = _selectedItem as TypeIncome;

@@ -11,18 +11,17 @@ class Wallets extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<Wallets> createState() {
-    return _ExpensesState();
+    return _WalletsState();
   }
 }
 
-class _ExpensesState extends ConsumerState<Wallets> {
-  Widget generateMainContent(List<Wallet> wallets) {
+class _WalletsState extends ConsumerState<Wallets> {
+  Widget generateMainContent(Widget mainContent) {
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          //TODO: Fix the size
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.9,
               child: TextButton(
@@ -39,7 +38,7 @@ class _ExpensesState extends ConsumerState<Wallets> {
         endIndent: MediaQuery.of(context).size.width * 0.05,
         thickness: 2,
       ),
-      WalletsList(items: wallets),
+      mainContent,
     ]);
   }
 
@@ -47,23 +46,26 @@ class _ExpensesState extends ConsumerState<Wallets> {
   Widget build(BuildContext context) {
     final wallets = ref.watch(walletsProvider);
 
-    Widget mainContent = Center(
-      child: Text(
-        AppLocalizations.of(context)!.noElements,
-        style: Theme.of(context).textTheme.titleMedium!.copyWith(
-              color: Theme.of(context).colorScheme.primary,
-              fontWeight: FontWeight.bold,
-            ),
-      ),
+    Widget mainContent = Expanded(
+      child: 
+        Center(
+          child: Text(
+            AppLocalizations.of(context)!.noElements,
+            style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+        ),
     );
 
     if (wallets.isNotEmpty) {
-      mainContent = generateMainContent(wallets);
+      mainContent = WalletsList(items: wallets);
     }
 
     return MainFrame(
       title: AppLocalizations.of(context)!.allWallets,
-      content: mainContent,
+      content: generateMainContent(mainContent),
     );
   }
 }
