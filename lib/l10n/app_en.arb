@@ -178,6 +178,42 @@
   "walletsDetails": "Wallet Details",
   "@walletsDetails": {
     "description": "Text for title of wallets add/edit screen"
+  },
+  "moneyTransfer": "Money Transfer",
+  "@moneyTransfer": {
+    "description": "label for the title of the money transfer screen"
+  },
+  "transfer": "Transfer",
+  "@transfer": {
+    "description": "label for the transfer button"
+  },
+  "chooseWalletOne": "Choose Wallet One",
+  "@chooseWalletOne": {
+    "description": "Label for the dropdown one in transfer screen"
+  },
+  "chooseWalletTwo": "Choose Wallet Two",
+  "@chooseWalletTwo": {
+    "description": "Label for the dropdown two in transfer screen"
+  },
+  "notEnoughWalletsTitle": "Not Enough Wallets",
+  "@notEnoughWalletsTitle": {
+    "description": "Label for the title of the not enough wallets"
+  },
+  "notEnoughWallets": "You should hаve at least 2 wallets in order to transfer money!",
+  "@notEnoughWallets": {
+    "description": "The warning dialog"
+  },
+  "noMoreWallets": "No more wallets",
+  "@noMoreWallets": {
+    "description": "Item from the wallet dropdown"
+  },
+  "notEnoughMoneyToTransfer": "Not enough money in this wallet to transfer. You can not complete the transaction!",
+  "@notEnoughMoneyToTransfer": {
+    "description": "Label for the content of the alert for not enough money to transfer"
+  },
+  "transactionCompleted": "Transaction Completed!",
+  "@transactionCompleted": {
+    "description": "Label for the scaffold when the transaction is completed"
   }
 
 }

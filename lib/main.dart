@@ -21,6 +21,7 @@ ThemeData createTheme(bool isDark) {
       vertical: 6,
     )),
     textTheme: GoogleFonts.latoTextTheme(),
+    
   );
 }
 

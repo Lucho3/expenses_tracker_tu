@@ -1,5 +1,6 @@
 import 'package:expenses_tracker_tu/models/wallet.dart';
 import 'package:expenses_tracker_tu/providers/wallets_provider.dart';
+import 'package:expenses_tracker_tu/widgets/wallets/wallet_displayer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -16,22 +17,17 @@ class TransferMoney extends ConsumerStatefulWidget {
 }
 
 class _TransferMoneyState extends ConsumerState<TransferMoney> {
-  final _titleController = TextEditingController();
   final _amountController = TextEditingController();
-  late final walletsP;
-  String q = "";
+  late List<Wallet> walletsList;
+  late Wallet? selectedWalletOne;
+  late Wallet? selectedWalletTwo;
 
   @override
   void initState() {
-    walletsP = ref.read(walletsProvider.notifier);
+    walletsList = ref.read(walletsProvider.notifier).items;
+    selectedWalletOne = null;
+    selectedWalletTwo = null;
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _amountController.dispose();
-    _titleController.dispose();
-    super.dispose();
   }
 
   void dialogShower(String l1, String l2) {
@@ -59,28 +55,98 @@ class _TransferMoneyState extends ConsumerState<TransferMoney> {
             ));
   }
 
-  bool evaluateInput(double? enteredAmount) {
+  DropdownMenu createCustomMenu(String label, bool isValueOne) {
+    List<Wallet> customWalletList = walletsList
+        .where((w) => ![selectedWalletOne, selectedWalletTwo].contains(w)).toList();
+    List<DropdownMenuEntry<Wallet?>> entries = customWalletList
+        .map<DropdownMenuEntry<Wallet?>>((Wallet w) {
+      return DropdownMenuEntry(
+        value: w,
+        label: w.title,
+        labelWidget: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              w.title,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.primary,
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
+            Divider(color: Theme.of(context).colorScheme.onPrimaryContainer),
+          ],
+        ),
+      );
+    }).toList();
+
+    if (customWalletList.isEmpty) {
+      entries.add(
+        DropdownMenuEntry(
+          value: null,
+          label: AppLocalizations.of(context)!.noMoreWallets,
+          labelWidget: Text(
+            AppLocalizations.of(context)!.noMoreWallets,
+            style: TextStyle(
+              color: Theme.of(context).disabledColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
+          ),
+          enabled: false, // Disable the entry
+        ),
+      );
+    }
+
+    return DropdownMenu(
+        label: Text(label,
+            style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontSize: 16
+                )),
+        textStyle: Theme.of(context).textTheme.titleSmall!.copyWith(
+              color: Theme.of(context).colorScheme.primary,
+              fontSize: 16
+            ),
+        menuStyle: MenuStyle(
+          backgroundColor: MaterialStatePropertyAll<Color>(
+              Theme.of(context).colorScheme.primaryContainer),
+        ),
+        width: MediaQuery.of(context).size.width * 0.92,
+        onSelected: (value) {
+          setState(() {
+            isValueOne
+                ? selectedWalletOne = value!
+                : selectedWalletTwo = value!;
+          });
+        },
+        dropdownMenuEntries: entries);
+  }
+
+  void _saveTransfer() {
+    final enteredAmount = double.tryParse(_amountController.text);
     final isAmountInvalid = enteredAmount == null || enteredAmount <= 0;
-    if (_titleController.text.trim().isEmpty || isAmountInvalid) {
+    if (isAmountInvalid) {
       dialogShower(AppLocalizations.of(context)!.alertTitle,
           AppLocalizations.of(context)!.alertContent);
-      return false;
     }
-    return true;
-  }
-
-  void _submitItemData() {
-    final enteredAmount = double.tryParse(_amountController.text);
-    if (evaluateInput(enteredAmount)) {
-      walletsP.addItem(Wallet(
-          title: _titleController.text,
-          amount: enteredAmount!,
-          isSelected: walletsP.items.isEmpty ? true : false));
-      Navigator.pop(context);
+    if (selectedWalletOne!.amount<enteredAmount!) {
+      dialogShower(AppLocalizations.of(context)!.notEnoughMoneyTitle,
+          AppLocalizations.of(context)!.notEnoughMoneyToTransfer);
     }
+    selectedWalletOne!.amount -=enteredAmount;
+    selectedWalletTwo!.amount +=enteredAmount;
+    ref.read(walletsProvider.notifier).editItem(selectedWalletOne!);
+    ref.read(walletsProvider.notifier).editItem(selectedWalletTwo!);
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: const Duration(seconds: 3),
+        content: Text(AppLocalizations.of(context)!.transactionCompleted),
+      ),
+    );
+    Navigator.pop(context);
   }
-
-  void _saveTransfer() {}
 
   List<Widget> widgetsPortrait() {
     return [
@@ -92,7 +158,7 @@ class _TransferMoneyState extends ConsumerState<TransferMoney> {
             padding: EdgeInsets.symmetric(vertical: 6),
             width: MediaQuery.of(context).size.width * 0.9,
             child: Text(
-              AppLocalizations.of(context)!.walletsDetails,
+              AppLocalizations.of(context)!.moneyTransfer,
               style: Theme.of(context).textTheme.titleMedium!.copyWith(
                   color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.bold,
@@ -102,63 +168,36 @@ class _TransferMoneyState extends ConsumerState<TransferMoney> {
           ),
         ],
       ),
-      Divider(
-        color: Theme.of(context).colorScheme.onPrimaryContainer,
-
-        thickness: 2,
-      ),
       Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4.0),
-        child: DropdownMenu(
-          width: MediaQuery.of(context).size.width * 0.92,
-          initialSelection: q,
-          onSelected: (String? value) {
-            setState(() {
-              q = value!;
-            });
-          },
-          dropdownMenuEntries:
-              [q, "sad"].map<DropdownMenuEntry<String>>((String value) {
-            return DropdownMenuEntry<String>(
-              value: value,
-              label: value,
-            );
-          }).toList(),
+        padding: const EdgeInsets.only(bottom: 8.0),
+        child: Divider(
+          color: Theme.of(context).colorScheme.onPrimaryContainer,
+          thickness: 2,
         ),
       ),
       Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4.0),
-        child: DropdownMenu(
-          width: MediaQuery.of(context).size.width * 0.92,
-          initialSelection: q,
-          onSelected: (String? value) {
-            setState(() {
-              q = value!;
-            });
-          },
-          dropdownMenuEntries:
-              [q, "sad"].map<DropdownMenuEntry<String>>((String value) {
-            return DropdownMenuEntry<String>(
-              value: value,
-              label: value,
-            );
-          }).toList(),
-        ),
-      ),
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: createCustomMenu(
+              AppLocalizations.of(context)!.chooseWalletOne, true)),
+      Padding(
+          padding: EdgeInsets.symmetric(vertical: 4.0),
+          child: createCustomMenu(
+              AppLocalizations.of(context)!.chooseWalletTwo, false)),
       Padding(
         padding: const EdgeInsets.only(bottom: 4.0, top: 4.0),
         child: TextField(
-          maxLength: 50,
-          controller: _titleController,
+          controller: _amountController,
+          keyboardType: TextInputType.number,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 color: Theme.of(context).colorScheme.primary,
               ),
           decoration: InputDecoration(
-            label: Text(AppLocalizations.of(context)!.walletName,
+            label: Text(AppLocalizations.of(context)!.amount,
                 style: Theme.of(context).textTheme.titleMedium!.copyWith(
                       color: Theme.of(context).colorScheme.primary,
                     )),
-            border: const OutlineInputBorder(),
+            prefixText: '\$ ',
+            border: OutlineInputBorder(),
           ),
         ),
       ),
@@ -181,7 +220,7 @@ class _TransferMoneyState extends ConsumerState<TransferMoney> {
               style: ElevatedButton.styleFrom(
                   backgroundColor:
                       Theme.of(context).colorScheme.primaryContainer),
-              child: Text(AppLocalizations.of(context)!.save,
+              child: Text(AppLocalizations.of(context)!.transfer,
                   style: Theme.of(context).textTheme.titleMedium!.copyWith(
                         color: Theme.of(context).colorScheme.primary,
                       )),
