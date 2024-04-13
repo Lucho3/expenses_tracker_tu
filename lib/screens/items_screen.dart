@@ -1,3 +1,4 @@
+import 'package:expenses_tracker_tu/models/expense.dart';
 import 'package:expenses_tracker_tu/models/item.dart';
 import 'package:expenses_tracker_tu/providers/expenses_provider.dart';
 import 'package:expenses_tracker_tu/providers/incomes_provider.dart';
@@ -14,7 +15,7 @@ class Items extends ConsumerStatefulWidget {
   const Items({super.key, required this.isExpense});
 
   final bool isExpense;
-  
+
   @override
   ConsumerState<Items> createState() {
     return _ExpensesState();
@@ -22,7 +23,7 @@ class Items extends ConsumerStatefulWidget {
 }
 
 class _ExpensesState extends ConsumerState<Items> {
-  late final provider; 
+  late final provider;
 
   String get titleOfScreen {
     if (widget.isExpense) {
@@ -31,19 +32,25 @@ class _ExpensesState extends ConsumerState<Items> {
       return AppLocalizations.of(context)!.drawerSecond;
     }
   }
-  
+
   @override
   void initState() {
-    provider = (widget.isExpense ? expensesProvider : incomesProvider) as NotifierProvider<ItemNotifier<ItemModel>, List<ItemModel>>;
+    provider = (widget.isExpense ? expensesProvider : incomesProvider)
+        as NotifierProvider<ItemNotifier<ItemModel>, List<ItemModel>>;
     super.initState();
   }
 
   void _removeItem(ItemModel item) {
     ref.read(provider.notifier).deleteItem(item);
     final walletsP = ref.read(walletsProvider.notifier);
-    final selectedWallet = walletsP.items.where((w) => w.isSelected == true).first;
-    selectedWallet.amount -= item.amount;
-    
+    final selectedWallet =
+        walletsP.items.where((w) => w.isSelected == true).first;
+    double moneyToManipulate;
+    item is Expense
+        ? moneyToManipulate = item.amount * -1
+        : moneyToManipulate = item.amount;
+    selectedWallet.amount -= moneyToManipulate;
+
     //TODO: this undo is problematic if we go to main screen anc click undo it doesnt work
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
@@ -54,7 +61,7 @@ class _ExpensesState extends ConsumerState<Items> {
             label: AppLocalizations.of(context)!.undo,
             onPressed: () {
               ref.read(provider.notifier).addItem(item);
-              selectedWallet.amount += item.amount;
+              selectedWallet.amount += moneyToManipulate;
             }),
       ),
     );
@@ -64,8 +71,7 @@ class _ExpensesState extends ConsumerState<Items> {
   @override
   Widget build(BuildContext context) {
     final itemsProvider = ref.watch(provider);
-    final settings = ref.watch(settingsProvider);
-    final screenWidth = MediaQuery.of(context).size.width;
+    ref.watch(settingsProvider);
 
     Widget mainContent = Center(
       child: Text(

@@ -223,12 +223,20 @@
   "@monthlySummary": {
     "description": "Summary for the monthly chart"
   },
+  "weeklySummary": "Weekly Summary",
+  "@weeklySummary": {
+    "description": "Summary for the weekly chart"
+  },
   "total": "Total",
   "@total": {
     "description": "The total result for the month label"
   },
-  "noRecords": "No records found for this month!",
-  "@noRecords": {
+  "noRecordsMonth": "No records found for this month!",
+  "@noRecordsMonth": {
+    "description": "No records found for this month label"
+  },
+  "noRecordsWeek": "No records found for this week!",
+  "@noRecordsWeek": {
     "description": "No records found for this month label"
   }
 
