@@ -1,5 +1,6 @@
 import 'package:expenses_tracker_tu/models/wallet.dart';
 import 'package:expenses_tracker_tu/providers/wallets_provider.dart';
+import 'package:expenses_tracker_tu/screens/new_wallet.dart';
 import 'package:expenses_tracker_tu/widgets/main_frame.dart';
 import 'package:expenses_tracker_tu/widgets/wallets/wallets_list.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,16 @@ class _WalletsState extends ConsumerState<Wallets> {
               width: MediaQuery.of(context).size.width * 0.9,
               child: TextButton(
                 onPressed: () {
+                   //TODO: refactor name and put in separate function
+                      showModalBottomSheet(
+                        constraints: const BoxConstraints(
+                          maxWidth: double.infinity,
+                        ),
+                        useSafeArea: true,
+                        isScrollControlled: true,
+                        context: context,
+                        builder: (ctx) => NewWallet(),
+                      );
                 },
                 child: Text(AppLocalizations.of(context)!.add),
               ),

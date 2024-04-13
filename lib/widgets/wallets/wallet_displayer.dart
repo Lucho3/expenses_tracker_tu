@@ -26,7 +26,7 @@ class _WalletsDisplayerState extends ConsumerState<WalletsDisplayer> {
 
   Widget buildAccountRow(String label, String value) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+      padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 8.0),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Row(
@@ -52,34 +52,34 @@ class _WalletsDisplayerState extends ConsumerState<WalletsDisplayer> {
     );
   }
 
-  List<Widget> rowBuilder(List<Wallet> provider ){
-    if(provider.isNotEmpty)
-    {
-    return [
-      buildAccountRow('${AppLocalizations.of(context)!.walletName}:',
-              provider.where((w) => w.isSelected == true).first.title),
-          buildAccountRow(AppLocalizations.of(context)!.amount + ':',
-            '\$${provider.where((w) => w.isSelected == true).first.amount.toStringAsFixed(2)}') 
-            ];
+  List<Widget> rowBuilder(List<Wallet> provider) {
+    if (provider.isNotEmpty) {
+      return [
+        buildAccountRow('${AppLocalizations.of(context)!.walletName}:',
+            provider.where((w) => w.isSelected == true).first.title),
+        buildAccountRow(AppLocalizations.of(context)!.amount + ':',
+            '\$${provider.where((w) => w.isSelected == true).first.amount.toStringAsFixed(2)}')
+      ];
     }
-    return [Container(
-      padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: Row(
-          children: [
-            Text(
-              AppLocalizations.of(context)!.noWallets ,
-              style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                  color: Theme.of(context).colorScheme.onSecondaryContainer,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16),
-            ),
-          ],
+    return [
+      Container(
+        padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Row(
+            children: [
+              Text(
+                AppLocalizations.of(context)!.noWallets,
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                    color: Theme.of(context).colorScheme.onSecondaryContainer,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16),
+              ),
+            ],
+          ),
         ),
-      ),
-    )];
-            
+      )
+    ];
   }
 
   @override
@@ -96,47 +96,50 @@ class _WalletsDisplayerState extends ConsumerState<WalletsDisplayer> {
           color: Theme.of(context).colorScheme.onPrimaryContainer,
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: EdgeInsets.only(top: 8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(flex: 1, child: Container()),
-                Expanded(
-                  flex: 8,
-                  child: Text(
-                    AppLocalizations.of(context)!.sWallet,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20),
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: EdgeInsets.only(top: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(flex: 1, child: Container()),
+                  Expanded(
+                    flex: 8,
+                    child: Text(
+                      AppLocalizations.of(context)!.sWallet,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20),
+                    ),
                   ),
-                ),
-                Expanded(
-                    flex: 1,
-                    child: IconButton(
-                      iconSize: 20,
-                      icon: const Icon(Icons.more_vert),
-                      color: Theme.of(context).colorScheme.primary,
-                      onPressed: () {
-                        _openWalletsScreen(context);
-                      },
-                    )),
-              ],
+                  Expanded(
+                      flex: 1,
+                      child: IconButton(
+                        iconSize: 20,
+                        icon: const Icon(Icons.more_vert),
+                        color: Theme.of(context).colorScheme.primary,
+                        onPressed: () {
+                          _openWalletsScreen(context);
+                        },
+                      )),
+                ],
+              ),
             ),
-          ),
-          Divider(
-            color: Theme.of(context).colorScheme.onPrimaryContainer,
-            indent: MediaQuery.of(context).size.width * 0.05,
-            endIndent: MediaQuery.of(context).size.width * 0.05,
-            thickness: 2,
-          ),
-...rowBuilder(provider)
-        ],
+            Divider(
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
+              indent: MediaQuery.of(context).size.width * 0.05,
+              endIndent: MediaQuery.of(context).size.width * 0.05,
+              thickness: 2,
+            ),
+            ...rowBuilder(provider)
+          ],
+        ),
       ),
     );
   }

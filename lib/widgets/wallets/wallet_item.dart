@@ -2,6 +2,7 @@ import 'package:expenses_tracker_tu/models/wallet.dart';
 import 'package:expenses_tracker_tu/providers/expenses_provider.dart';
 import 'package:expenses_tracker_tu/providers/incomes_provider.dart';
 import 'package:expenses_tracker_tu/providers/wallets_provider.dart';
+import 'package:expenses_tracker_tu/screens/new_wallet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -141,7 +142,20 @@ class WalletItem extends ConsumerWidget {
                       AppLocalizations.of(context)!.amount + ':',
                       '\$${item.amount.toStringAsFixed(2)}'),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      //TODO: refactor name and put in separate function
+                      showModalBottomSheet(
+                        constraints: const BoxConstraints(
+                          maxWidth: double.infinity,
+                        ),
+                        useSafeArea: true,
+                        isScrollControlled: true,
+                        context: context,
+                        builder: (ctx) => NewWallet(
+                          item: item,
+                        ),
+                      );
+                    },
                     child: Text(AppLocalizations.of(context)!.edit),
                     style: TextButton.styleFrom(
                       padding: EdgeInsets.zero,
