@@ -1,6 +1,7 @@
 import 'package:expenses_tracker_tu/models/item.dart';
 import 'package:expenses_tracker_tu/models/wallet.dart';
 import 'package:flutter/material.dart';
+import 'package:floor/floor.dart';
 
 enum CategoryExpense {
   food,
@@ -16,7 +17,11 @@ const categoryIcon = {
   CategoryExpense.work: Icons.work,
 };
 
+@entity
 class Expense extends ItemModel {
+  @PrimaryKey(autoGenerate: true)
+  int? id;
+
   CategoryExpense category;
 
   Expense({

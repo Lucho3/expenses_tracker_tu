@@ -1,16 +1,17 @@
-import 'package:uuid/uuid.dart';
+import 'package:floor/floor.dart';
 
-const uuid = Uuid();
+@Entity(tableName: 'wallets')
 class Wallet {
-  String id;
+  @PrimaryKey(autoGenerate: true)
+  int? id;
+
   String title;
   double amount;
   bool isSelected;
-
 
   Wallet({
     required this.title,
     required this.amount,
     required this.isSelected,
-  }) : id = uuid.v4();
+  });
 }

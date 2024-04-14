@@ -46,8 +46,8 @@ class App extends ConsumerWidget {
           GlobalCupertinoLocalizations.delegate,
         ],
         supportedLocales: L10n.all,
-        locale: Locale(settings['isEnglish']! ? 'en' : 'bg'),
-        theme: createTheme(settings['isDarkMode']!),
+        locale: Locale(settings.isEnglish! ? 'en' : 'bg'),
+        theme: createTheme(settings.isDarkMode!),
         home: Builder(
           builder: (context) {
             return MainFrame(

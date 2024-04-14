@@ -53,7 +53,7 @@ class _SettingsContainerState extends ConsumerState<SettingsContainer> {
               const Icon(Icons.light_mode),
               const SizedBox(width: 8),
               Switch(
-                value: settings['isDarkMode']!,
+                value: settings.isDarkMode!,
                 onChanged: (bool value) {
                   ref
                       .read(settingsProvider.notifier)
@@ -84,7 +84,7 @@ class _SettingsContainerState extends ConsumerState<SettingsContainer> {
                       )),
               const SizedBox(width: 8),
               Switch(
-                value: settings['isEnglish']!,
+                value: settings.isEnglish!,
                 onChanged: (bool value) {
                   ref
                       .read(settingsProvider.notifier)

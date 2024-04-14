@@ -1,22 +1,27 @@
+import 'package:expenses_tracker_tu/models/settings.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SettingsNotifier extends Notifier<Map<String, bool>> {
+class SettingsNotifier extends Notifier<Settings> {
   @override
-  Map<String, bool> build() {
-    return {
-          'isEnglish': true,
-          'isDarkMode': true,
-        };
+  Settings build() {
+    return Settings(isEnglish: true, isDarkMode: true);
   }
   
   void setSetting(String setting, bool newState) {
-    state = {
-      ...state,
-      setting: newState,
-    };
+  if (setting == 'isEnglish') {
+    state = Settings(
+      isEnglish: newState,
+      isDarkMode: state.isDarkMode,
+    );
+  } else if (setting == 'isDarkMode') {
+    state = Settings(
+      isEnglish: state.isEnglish,
+      isDarkMode: newState,
+    );
   }
+}
 }
 
 final settingsProvider =
-    NotifierProvider<SettingsNotifier, Map<String, bool>>(
+    NotifierProvider<SettingsNotifier, Settings>(
         () => SettingsNotifier());

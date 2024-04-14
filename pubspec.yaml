@@ -45,6 +45,7 @@ dependencies:
   provider: ^6.1.2
   dropdown_button2: ^2.3.9
   syncfusion_flutter_charts: ^25.1.39+1
+  floor: ^1.4.2
 
 dev_dependencies:
   flutter_test:
