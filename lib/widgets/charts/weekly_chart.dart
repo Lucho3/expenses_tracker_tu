@@ -66,7 +66,7 @@ class _MyHomePageState extends ConsumerState<WeeklyChart> {
 
     return Center(
       child: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.25,
+        height: MediaQuery.of(context).size.height * 0.20,
         child: SfCartesianChart(
           primaryXAxis: CategoryAxis(
             majorGridLines: MajorGridLines(

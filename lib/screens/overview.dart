@@ -3,6 +3,7 @@ import 'package:expenses_tracker_tu/widgets/charts/monthly_chart.dart';
 import 'package:expenses_tracker_tu/widgets/charts/weekly_chart.dart';
 import 'package:expenses_tracker_tu/widgets/wallets/wallet_displayer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OverviewScreen extends StatefulWidget {
@@ -25,10 +26,10 @@ class _OverviewScreenState extends State<OverviewScreen> {
           title: AppLocalizations.of(context)!.monthlySummary,
           content: MonthlyChart(),
         ),
-        ChartMainContainer(
-          title: AppLocalizations.of(context)!.weeklySummary,
-          content: WeeklyChart(),
-        ),
+         ChartMainContainer(
+            title: AppLocalizations.of(context)!.weeklySummary,
+            content: WeeklyChart(),
+          ),
       ],
     );
   }
