@@ -1,59 +1,51 @@
+import 'package:expenses_tracker_tu/database/expenses_database.dart';
 import 'package:expenses_tracker_tu/models/wallet.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dart:async';
 
-class WalletsNotifier extends Notifier<List<Wallet>> {
+class WalletsNotifier extends AsyncNotifier<List<Wallet>> {
+  late AppDatabase database;
+
   @override
-  List<Wallet> build() {
-    return [
-      new Wallet(title: "Salary", amount: 12345, isSelected: true),
-      Wallet(title: "Other", amount: 12, isSelected: false)
-    ];
+  Future<List<Wallet>> build() async {
+    database =
+        await $FloorAppDatabase.databaseBuilder('expenses_database.db').build();
+    List<Wallet> wallets = await database.walletDao.findAllWallets();
+    return wallets;
   }
 
-  List<Wallet> get items {
+  Future<void> loadWallets() async {
+    List<Wallet> wallets = await database.walletDao.findAllWallets();
+    state = AsyncValue.data(wallets);
+  }
+
+  AsyncValue<List<Wallet>> get items {
     return state;
   }
 
-  void addItem(Wallet wallet) {
-    state = [...state, wallet];
+  Future<void> addItem(Wallet wallet) async {
+    await database.walletDao.insertWallet(wallet);
+    await loadWallets();
   }
 
-  void deleteItem(Wallet wallet) {
-    state = state.where((element) => element != wallet).toList();
+  Future<void> deleteItem(Wallet wallet) async {
+    await database.walletDao.deleteWallet(wallet);
+    await database.walletDao.removeAllIncomes(wallet.id!);
+    await database.walletDao.removeAllExpenses(wallet.id!);
+    await loadWallets();
   }
 
-  void editItem(Wallet item) {
-    final index = state.indexOf(item);
-    if (index != -1) {
-      state = List.from(state)..[index] = item;
-    }
+  Future<void> editItem(Wallet item) async {
+    await database.walletDao.updateWallet(item);
+    await loadWallets();
   }
 
-  //TODO: Refactor
-  void changeSelected(Wallet selectedWallet) {
-    final index = state.indexOf(selectedWallet);
-    if (index != -1) {
-      final updatedWallets = state.map((wallet) {
-        if (wallet == selectedWallet) {
-          return Wallet(
-            title: wallet.title,
-            amount: wallet.amount,
-            isSelected: true,
-          );
-        } else if (wallet.isSelected) {
-          return Wallet(
-            title: wallet.title,
-            amount: wallet.amount,
-            isSelected: false,
-          );
-        } else {
-          return wallet;
-        }
-      }).toList();
-      state = updatedWallets;
-    }
+  Future<void> changeSelected(Wallet selectedWallet) async {
+    await database.walletDao.deselectSelectedWallet();
+    await database.walletDao.selectWallet(selectedWallet.id!);
+    await loadWallets();
   }
 }
 
-final walletsProvider =
-    NotifierProvider<WalletsNotifier, List<Wallet>>(() => WalletsNotifier());
+final walletsProvider = AsyncNotifierProvider<WalletsNotifier, List<Wallet>>(
+    () => WalletsNotifier());

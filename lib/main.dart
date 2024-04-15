@@ -1,3 +1,4 @@
+
 import 'package:expenses_tracker_tu/l10n/l10n.dart';
 import 'package:expenses_tracker_tu/providers/settings_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -38,23 +39,27 @@ class App extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(settingsProvider);
 
+    final isEnglish = settings['isEnglish'] ?? true; 
+    final isDarkMode = settings['isDarkMode'] ?? false;
+
     return MaterialApp(
-        localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: L10n.all,
-        locale: Locale(settings.isEnglish! ? 'en' : 'bg'),
-        theme: createTheme(settings.isDarkMode!),
-        home: Builder(
-          builder: (context) {
-            return MainFrame(
-              title: AppLocalizations.of(context)!.appTitle,
-              content: const OverviewScreen(),
-            );
-          },
-        ));
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: L10n.all,
+      locale: Locale(isEnglish ? 'en' : 'bg'),
+      theme: createTheme(isDarkMode),
+      home: Builder(
+        builder: (context) {
+          return MainFrame(
+            title: AppLocalizations.of(context)!.appTitle,
+            content: const OverviewScreen(),
+          );
+        },
+      ),
+    );
   }
 }

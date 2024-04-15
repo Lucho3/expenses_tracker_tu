@@ -15,13 +15,11 @@ class TransferMoney extends ConsumerStatefulWidget {
 
 class _TransferMoneyState extends ConsumerState<TransferMoney> {
   final _amountController = TextEditingController();
-  late List<Wallet> walletsList;
   late Wallet? selectedWalletOne;
   late Wallet? selectedWalletTwo;
 
   @override
   void initState() {
-    walletsList = ref.read(walletsProvider.notifier).items;
     selectedWalletOne = null;
     selectedWalletTwo = null;
     super.initState();
@@ -52,7 +50,7 @@ class _TransferMoneyState extends ConsumerState<TransferMoney> {
             ));
   }
 
-  DropdownMenu createCustomMenu(String label, bool isValueOne) {
+  DropdownMenu createCustomMenu(String label, bool isValueOne, List<Wallet> walletsList) {
     List<Wallet> customWalletList = walletsList
         .where((w) => ![selectedWalletOne, selectedWalletTwo].contains(w))
         .toList();
@@ -117,21 +115,24 @@ class _TransferMoneyState extends ConsumerState<TransferMoney> {
         dropdownMenuEntries: entries);
   }
 
-  void _saveTransfer() {
-    final enteredAmount = double.tryParse(_amountController.text);
-    final isAmountInvalid = enteredAmount == null || enteredAmount <= 0;
-    if (isAmountInvalid) {
-      dialogShower(AppLocalizations.of(context)!.alertTitle,
-          AppLocalizations.of(context)!.alertContent);
-    }
-    if (selectedWalletOne!.amount < enteredAmount!) {
-      dialogShower(AppLocalizations.of(context)!.notEnoughMoneyTitle,
-          AppLocalizations.of(context)!.notEnoughMoneyToTransfer);
-    }
-    selectedWalletOne!.amount -= enteredAmount;
-    selectedWalletTwo!.amount += enteredAmount;
-    ref.read(walletsProvider.notifier).editItem(selectedWalletOne!);
-    ref.read(walletsProvider.notifier).editItem(selectedWalletTwo!);
+  void _saveTransfer() async {
+  final enteredAmount = double.tryParse(_amountController.text);
+  if (enteredAmount == null || enteredAmount <= 0) {
+    dialogShower(AppLocalizations.of(context)!.alertTitle,
+        AppLocalizations.of(context)!.alertContent);
+    return; // Exit if invalid amount
+  }
+
+  if (selectedWalletOne!.amount < enteredAmount) {
+    dialogShower(AppLocalizations.of(context)!.notEnoughMoneyTitle,
+        AppLocalizations.of(context)!.notEnoughMoneyToTransfer);
+    return; // Exit if not enough funds
+  }
+
+  try {
+    // Create a transaction-like logic in editItem or another method
+    await ref.read(walletsProvider.notifier).editItem(selectedWalletOne!);
+    await ref.read(walletsProvider.notifier).editItem(selectedWalletTwo!);
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -139,10 +140,14 @@ class _TransferMoneyState extends ConsumerState<TransferMoney> {
         content: Text(AppLocalizations.of(context)!.transactionCompleted),
       ),
     );
-    Navigator.pop(context);
-  }
 
-  List<Widget> widgetsPortrait() {
+    Navigator.pop(context);
+  } catch (e) {
+    
+  }
+}
+
+  List<Widget> widgetsPortrait(List<Wallet> wallets) {
     return [
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -172,11 +177,11 @@ class _TransferMoneyState extends ConsumerState<TransferMoney> {
       Padding(
           padding: const EdgeInsets.symmetric(vertical: 4.0),
           child: createCustomMenu(
-              AppLocalizations.of(context)!.chooseWalletOne, true)),
+              AppLocalizations.of(context)!.chooseWalletOne, true, wallets)),
       Padding(
           padding: EdgeInsets.symmetric(vertical: 4.0),
           child: createCustomMenu(
-              AppLocalizations.of(context)!.chooseWalletTwo, false)),
+              AppLocalizations.of(context)!.chooseWalletTwo, false, wallets)),
       Padding(
         padding: const EdgeInsets.only(bottom: 4.0, top: 4.0),
         child: TextField(
@@ -234,6 +239,9 @@ class _TransferMoneyState extends ConsumerState<TransferMoney> {
   @override
   Widget build(BuildContext context) {
     final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
+    final walletsAsyncValue =
+        ref.watch(walletsProvider); // Watching the walletsProvider
+
     return LayoutBuilder(builder: (context, constraints) {
       return SizedBox(
         width: constraints.maxWidth,
@@ -242,7 +250,15 @@ class _TransferMoneyState extends ConsumerState<TransferMoney> {
           child: Padding(
             padding: EdgeInsets.fromLTRB(16, 16, 16, keyboardSpace + 16),
             child: Column(
-              children: [...widgetsPortrait()],
+              children: [
+                walletsAsyncValue.when(
+                  data: (wallets) => Column(children: [
+                    ...widgetsPortrait(wallets)
+                  ]), // Pass wallets to the function
+                  loading: () => CircularProgressIndicator(),
+                  error: (e, stack) => Text('Error: $e'),
+                ),
+              ],
             ),
           ),
         ),

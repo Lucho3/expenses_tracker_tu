@@ -1,4 +1,4 @@
-import 'package:expenses_tracker_tu/models/wallet.dart';
+
 import 'package:expenses_tracker_tu/providers/wallets_provider.dart';
 import 'package:expenses_tracker_tu/screens/new_wallet.dart';
 import 'package:expenses_tracker_tu/widgets/main_frame.dart';
@@ -70,8 +70,9 @@ class _WalletsState extends ConsumerState<Wallets> {
         ),
     );
 
-    if (wallets.isNotEmpty) {
-      mainContent = WalletsList(items: wallets);
+    //TODO: fix
+    if (wallets.value!.isNotEmpty) {
+      mainContent = WalletsList(items: wallets.value!);
     }
 
     return MainFrame(

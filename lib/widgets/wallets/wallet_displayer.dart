@@ -1,6 +1,5 @@
 import 'package:expenses_tracker_tu/models/wallet.dart';
 import 'package:expenses_tracker_tu/screens/wallets_screen.dart';
-import 'package:expenses_tracker_tu/widgets/wallets/wallets_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:expenses_tracker_tu/providers/wallets_provider.dart';
@@ -67,14 +66,13 @@ class _WalletsDisplayerState extends ConsumerState<WalletsDisplayer> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                AppLocalizations.of(context)!.noWallets,
-                style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                    color: Theme.of(context).colorScheme.onSecondaryContainer,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16),
-              ),
+              Text(AppLocalizations.of(context)!.noWallets,
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      color: Theme.of(context).colorScheme.secondary,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16)),
             ],
           ),
         ),
@@ -85,6 +83,7 @@ class _WalletsDisplayerState extends ConsumerState<WalletsDisplayer> {
   @override
   Widget build(BuildContext context) {
     final provider = ref.watch(walletsProvider);
+
     return Container(
       width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.all(10),
@@ -137,7 +136,11 @@ class _WalletsDisplayerState extends ConsumerState<WalletsDisplayer> {
               endIndent: MediaQuery.of(context).size.width * 0.05,
               thickness: 2,
             ),
-            ...rowBuilder(provider)
+            provider.when(
+              data: (wallets) => Column(children: rowBuilder(wallets)),
+              loading: () => const CircularProgressIndicator(),
+              error: (error, stack) => Text('Error: $error'),
+            ),
           ],
         ),
       ),

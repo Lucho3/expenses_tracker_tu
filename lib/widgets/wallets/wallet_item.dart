@@ -1,6 +1,4 @@
 import 'package:expenses_tracker_tu/models/wallet.dart';
-import 'package:expenses_tracker_tu/providers/expenses_provider.dart';
-import 'package:expenses_tracker_tu/providers/incomes_provider.dart';
 import 'package:expenses_tracker_tu/providers/wallets_provider.dart';
 import 'package:expenses_tracker_tu/screens/new_wallet.dart';
 import 'package:flutter/material.dart';
@@ -24,71 +22,61 @@ class WalletItem extends ConsumerWidget {
     ref.read(walletsProvider.notifier).changeSelected(item);
   }
 
-  void deleteWallet(BuildContext context, WidgetRef ref) {
-    showDialog(
-      context: context,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          title: Text(
-            AppLocalizations.of(context)!.deleteTitle,
-            style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                color: Theme.of(context).colorScheme.onSecondaryContainer,
-                fontWeight: FontWeight.bold,
-                fontSize: 20),
-            textAlign: TextAlign.center,
+Future<void> deleteWallet(BuildContext context, WidgetRef ref) async {
+  final confirmed = await showDialog<bool>(
+    context: context,
+    builder: (BuildContext dialogContext) {
+      return AlertDialog(
+        title: Text(
+          AppLocalizations.of(context)!.deleteTitle,
+          style: Theme.of(context).textTheme.titleMedium!.copyWith(
+              color: Theme.of(context).colorScheme.onSecondaryContainer,
+              fontWeight: FontWeight.bold,
+              fontSize: 20),
+          textAlign: TextAlign.center,
+        ),
+        content: Text(
+          AppLocalizations.of(context)!.deleteText,
+          style: Theme.of(context).textTheme.titleMedium!.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              fontWeight: FontWeight.bold,
+              fontSize: 16),
+          textAlign: TextAlign.center,
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
-          content: Text(
-            AppLocalizations.of(context)!.deleteText,
-            style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-                fontWeight: FontWeight.bold,
-                fontSize: 16),
-            textAlign: TextAlign.center,
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(AppLocalizations.of(context)!.delete),
           ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                // Close the dialog
-                Navigator.of(dialogContext).pop(false);
-              },
-              child: Text(AppLocalizations.of(context)!.cancel),
-            ),
-            TextButton(
-              onPressed: () {
-                // Close the dialog and delete the wallet
-                Navigator.of(dialogContext).pop(true);
-              },
-              child: Text(AppLocalizations.of(context)!.delete),
-            ),
-          ],
-        );
-      },
-    ).then((confirmed) {
-      // If the user confirmed deletion, proceed
-      if (confirmed != null && confirmed) {
-        // Show a snack bar
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            duration: const Duration(seconds: 3),
-            content: Text(AppLocalizations.of(context)!.walletDeleted),
-          ),
-        );
-        // Delete the wallet
-        ref.read(walletsProvider.notifier).deleteItem(item);
-        ref.read(expensesProvider.notifier).removeAllItemsWithWallet(item);
-        ref.read(incomesProvider.notifier).removeAllItemsWithWallet(item);
-        if (item.isSelected) {
-          //This if is important to be here if we move it upwards an error is expected
-          if (ref.read(walletsProvider.notifier).items.isNotEmpty) {
-            ref
-                .read(walletsProvider.notifier)
-                .changeSelected(ref.read(walletsProvider.notifier).items[0]);
-          }
-        }
-      }
-    });
+        ],
+      );
+    },
+  );
+
+  if (confirmed == true) {
+    await ref.read(walletsProvider.notifier).deleteItem(item);
+
+    var remainingWallets = ref.read(walletsProvider.notifier).items.value!;
+    if (item.isSelected && remainingWallets.isNotEmpty) {
+      await ref.read(walletsProvider.notifier).changeSelected(remainingWallets.first);
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(AppLocalizations.of(context)!.walletDeleted),
+        duration: const Duration(seconds: 3),
+      ),
+    );
+    
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    }
   }
+}
 
   Widget buildAccountRow(BuildContext context, String label, String value) {
     return Row(

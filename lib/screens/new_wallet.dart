@@ -1,4 +1,3 @@
-
 import 'package:expenses_tracker_tu/models/wallet.dart';
 import 'package:expenses_tracker_tu/providers/wallets_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -80,12 +79,18 @@ class _NewWalletState extends ConsumerState<NewWallet> {
   void _submitItemData() {
     final enteredAmount = double.tryParse(_amountController.text);
     if (evaluateInput(enteredAmount)) {
-      walletsP.addItem(Wallet(
-              title: _titleController.text,
-              amount: enteredAmount!,
-              isSelected: walletsP.items.isEmpty ? true : false
-              ));
-      Navigator.pop(context);
+      ref.read(walletsProvider).when(
+            data: (wallets) {
+              final isSelected = wallets.isEmpty;
+              walletsP.addItem(Wallet(
+                  title: _titleController.text,
+                  amount: enteredAmount!,
+                  isSelected: isSelected));
+              Navigator.pop(context);
+            },
+            loading: () => const CircularProgressIndicator(),
+            error: (error, stack) => Text('Error: $error'),
+          );
     }
   }
 
@@ -106,20 +111,21 @@ class _NewWalletState extends ConsumerState<NewWallet> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 6),
-              width: MediaQuery.of(context).size.width * 0.9,
-              child: Text(AppLocalizations.of(context)!.walletsDetails,
-                style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18
-                    ),
-                    textAlign: TextAlign.center,),
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 6),
+            width: MediaQuery.of(context).size.width * 0.9,
+            child: Text(
+              AppLocalizations.of(context)!.walletsDetails,
+              style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18),
+              textAlign: TextAlign.center,
             ),
+          ),
         ],
       ),
-            Divider(
+      Divider(
         color: Theme.of(context).colorScheme.onPrimaryContainer,
         indent: MediaQuery.of(context).size.width * 0.05,
         endIndent: MediaQuery.of(context).size.width * 0.05,
@@ -158,11 +164,11 @@ class _NewWalletState extends ConsumerState<NewWallet> {
         ),
       ),
       Padding(
-        padding: EdgeInsets.only(top:8.0),
+        padding: EdgeInsets.only(top: 8.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-          TextButton(
+            TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -172,7 +178,8 @@ class _NewWalletState extends ConsumerState<NewWallet> {
                       )),
             ),
             ElevatedButton(
-              onPressed: widget.item == null ? _submitItemData : _saveEditedItem,
+              onPressed:
+                  widget.item == null ? _submitItemData : _saveEditedItem,
               style: ElevatedButton.styleFrom(
                   backgroundColor:
                       Theme.of(context).colorScheme.primaryContainer),
@@ -181,7 +188,8 @@ class _NewWalletState extends ConsumerState<NewWallet> {
                         color: Theme.of(context).colorScheme.primary,
                       )),
             ),
-        ],),
+          ],
+        ),
       )
     ];
   }

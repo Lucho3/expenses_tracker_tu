@@ -1,5 +1,6 @@
 import 'package:expenses_tracker_tu/models/expense.dart';
 import 'package:expenses_tracker_tu/models/item.dart';
+import 'package:expenses_tracker_tu/models/wallet.dart';
 import 'package:expenses_tracker_tu/providers/expenses_provider.dart';
 import 'package:expenses_tracker_tu/providers/incomes_provider.dart';
 import 'package:expenses_tracker_tu/providers/item_provider.dart';
@@ -43,8 +44,9 @@ class _ExpensesState extends ConsumerState<Items> {
   void _removeItem(ItemModel item) {
     ref.read(provider.notifier).deleteItem(item);
     final walletsP = ref.read(walletsProvider.notifier);
+    //TODO: async
     final selectedWallet =
-        walletsP.items.where((w) => w.isSelected == true).first;
+        walletsP.items.value!.where((w) => w.isSelected == true).first;
     double moneyToManipulate;
     item is Expense
         ? moneyToManipulate = item.amount * -1

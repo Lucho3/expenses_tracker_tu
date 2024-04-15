@@ -126,8 +126,9 @@ class _NewExpenseState extends ConsumerState<NewItem> {
 
   bool addItem(WalletsNotifier walletsP) {
     final enteredAmount = double.tryParse(_amountController.text);
+    //TODO: Chek for sync
     Wallet selectedWallet =
-        walletsP.items.where((w) => w.isSelected == true).first;
+        (walletsP.items.value as List<Wallet>).where((w) => w.isSelected == true).first;
 
     if (evaluateInput(enteredAmount)) {
       final ItemModel newItem;
@@ -135,10 +136,10 @@ class _NewExpenseState extends ConsumerState<NewItem> {
         if (selectedWallet.amount >= enteredAmount!) {
           newItem = Expense(
               title: _titleController.text,
-              amount: enteredAmount!,
+              amount: enteredAmount,
               date: _selectedDate!,
               category: _selectedItem as CategoryExpense,
-              wallet: selectedWallet);
+              walletId: selectedWallet.id!);
           selectedWallet.amount -= enteredAmount;
         } else {
           dialogShower(AppLocalizations.of(context)!.notEnoughMoneyTitle,
@@ -151,7 +152,7 @@ class _NewExpenseState extends ConsumerState<NewItem> {
             amount: enteredAmount!,
             date: _selectedDate!,
             type: _selectedItem as TypeIncome,
-            wallet: selectedWallet);
+            walletId: selectedWallet.id!);
         selectedWallet.amount += enteredAmount;
       }
       walletsP.editItem(selectedWallet);
@@ -163,7 +164,8 @@ class _NewExpenseState extends ConsumerState<NewItem> {
 
   void _submitItemData() {
     final walletsP = ref.watch(walletsProvider.notifier);
-    if (walletsP.items.isNotEmpty) {
+    //TODO: async
+    if (walletsP.items.value!.isNotEmpty) {
       if (addItem(walletsP)) {
         Navigator.pop(context);
       }

@@ -1,3 +1,4 @@
+import 'package:expenses_tracker_tu/models/converters/datetimeConverter.dart';
 import 'package:expenses_tracker_tu/models/item.dart';
 import 'package:expenses_tracker_tu/models/wallet.dart';
 import 'package:flutter/material.dart';
@@ -15,24 +16,21 @@ const typeIcon = {
   TypeIncome.other: Icons.pending_actions_outlined,
 };
 
-@entity
+@TypeConverters([DateTimeConverter])
+@Entity(tableName: 'incomes', foreignKeys:[ForeignKey(entity: Wallet, parentColumns: ['id'], childColumns: ['walletId'])
+])
 class Income extends ItemModel {
   @PrimaryKey(autoGenerate: true)
   int? id;
   TypeIncome type;
 
   Income({
-    required String title,
-    required double amount,
-    required DateTime date,
-    required Wallet wallet,
+    required super.title,
+    required super.amount,
+    required super.date,
+    required super.walletId,
     required this.type,
-  }) : super(
-          title: title,
-          amount: amount,
-          date: date,
-          wallet: wallet,
-        );
+  });
 }
 
 

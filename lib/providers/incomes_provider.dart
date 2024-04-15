@@ -34,7 +34,7 @@ class IncomesNotifier extends ItemNotifier<Income> {
 
   @override
   void removeAllItemsWithWallet(Wallet wallet) {
-    state.removeWhere((item) => item.wallet == wallet);
+    state.removeWhere((item) => item.walletId == wallet.id);
     state = [...state];
   }
 }

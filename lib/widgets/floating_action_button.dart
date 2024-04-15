@@ -100,7 +100,8 @@ class CustomFAB extends ConsumerWidget {
           backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
           shape: const CircleBorder(),
           onTap: () {
-            if(ref.read(walletsProvider.notifier).items.length >= 2) {
+            //TODO: async
+            if(ref.read(walletsProvider.notifier).items.value!.length >= 2) {
               _openAddItemOverlay(context, TransferMoney());
             }
             else {
