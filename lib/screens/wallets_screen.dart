@@ -1,4 +1,3 @@
-
 import 'package:expenses_tracker_tu/providers/wallets_provider.dart';
 import 'package:expenses_tracker_tu/screens/new_wallet.dart';
 import 'package:expenses_tracker_tu/widgets/main_frame.dart';

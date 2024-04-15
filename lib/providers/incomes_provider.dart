@@ -1,44 +1,43 @@
+import 'package:expenses_tracker_tu/database/expenses_database.dart';
 import 'package:expenses_tracker_tu/models/income.dart';
 import 'package:expenses_tracker_tu/models/wallet.dart';
 import 'package:expenses_tracker_tu/providers/item_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class IncomesNotifier extends ItemNotifier<Income> {
-  @override
-  List<Income> build() {
-    return [];
-  }
+  late AppDatabase database;
 
   @override
-  List<Income> get items {
-     return state;
+  Future<List<Income>> build() async {
+    database = await $FloorAppDatabase.databaseBuilder('expenses_database.db').build();
+    List<Income> incomes = await database.incomeDao.findAllIncomes();
+    return incomes;
   }
 
-  @override
-  void addItem(Income income) {
-    state = [...state, income];
+  Future<void> loadIncomes() async {
+    List<Income> incomes = await database.incomeDao.findAllIncomes();
+    state = AsyncValue.data(incomes);
+  }
+
+   @override
+  AsyncValue<List<Income>> get items {
+    return state;
+  }
+
+    Future<void> addItem(Income income) async {
+    await database.incomeDao.insertIncome(income);
+    await loadIncomes();
   }
   
-  @override
-  void deleteItem(Income income) {
-    state = state.where((element) => element!= income).toList();
+    Future<void> deleteItem(Income income) async {
+    await database.incomeDao.deleteIncome(income);
+    await loadIncomes();
   }
   
-  @override
-  void editItem(Income item) {
-    final index = state.indexOf(item);
-    if (index != -1) {
-      state = List.from(state)..[index] = item;
-    }
-  }
-
-  @override
-  void removeAllItemsWithWallet(Wallet wallet) {
-    state.removeWhere((item) => item.walletId == wallet.id);
-    state = [...state];
+   Future<void> editItem(Income income) async {
+    await database.incomeDao.updateIncome(income);
+    await loadIncomes();
   }
 }
-
-final incomesProvider =
-    NotifierProvider<IncomesNotifier, List<Income>>(
-        () => IncomesNotifier());
+final incomesProvider = AsyncNotifierProvider<IncomesNotifier, List<Income>>(
+    () => IncomesNotifier());
