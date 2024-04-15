@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class WalletsList extends StatelessWidget {
-  WalletsList({super.key, required this.items});
+  const WalletsList({super.key, required this.items});
 
-  List<Wallet> items;
+  final List<Wallet> items;
 
   @override
   Widget build(BuildContext context) {

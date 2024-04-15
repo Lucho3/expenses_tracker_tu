@@ -10,7 +10,7 @@ import 'package:intl/intl.dart';
 
 class WeeklyChart extends ConsumerStatefulWidget {
   // ignore: prefer_const_constructors_in_immutables
-  WeeklyChart({Key? key}) : super(key: key);
+  WeeklyChart({super.key});
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -37,7 +37,7 @@ class _MyHomePageState extends ConsumerState<WeeklyChart> {
       List<Expense> expenses, List<Income> incomes) {
     Map<DateTime, Map<String, double>> expensesPerDay = {};
     List<DateTime> last7Days = getLast7Days();
-    last7Days.forEach((day) {
+    for (var day in last7Days) {
       expensesPerDay[day] = {
         "Expenses": expenses
             .where((expense) => datesAreEqual(expense.date, day))
@@ -46,12 +46,12 @@ class _MyHomePageState extends ConsumerState<WeeklyChart> {
             .where((expense) => datesAreEqual(expense.date, day))
             .fold(0.0, (sum, income) => sum + income.amount)
       };
-    });
+    }
     return expensesPerDay;
   }
 
-  Widget generateMainContent(Map<DateTime, Map<String, double>> dateContiner) {
-    final List<ChartData> chartData = dateContiner.entries
+  Widget generateMainContent(Map<DateTime, Map<String, double>> dateContainer) {
+    final List<ChartData> chartData = dateContainer.entries
         .map((entry) {
           String formattedDate = DateFormat('MM/dd').format(entry.key);
           return ChartData(
@@ -65,7 +65,7 @@ class _MyHomePageState extends ConsumerState<WeeklyChart> {
         .toList();
 
     return Center(
-      child: Container(
+      child: SizedBox(
         height: MediaQuery.of(context).size.height * 0.25,
         child: SfCartesianChart(
           primaryXAxis: CategoryAxis(
@@ -96,18 +96,36 @@ class _MyHomePageState extends ConsumerState<WeeklyChart> {
   Widget build(BuildContext context) {
     final expenses = ref.watch(expensesProvider);
     final incomes = ref.watch(incomesProvider);
-    final last7DaysMap = getIncomesExpensesMap(expenses, incomes);
-    double fullSum = last7DaysMap.values.fold(
-        0.0, (sum, values) => sum + values["Incomes"]! + values["Expenses"]!);
-    if (fullSum > 0) {
-      return generateMainContent(last7DaysMap);
-    } else {
-      return Text(AppLocalizations.of(context)!.noRecordsWeek,
-          style: Theme.of(context).textTheme.titleMedium!.copyWith(
-              color: Theme.of(context).colorScheme.secondary,
-              fontWeight: FontWeight.bold,
-              fontSize: 16));
-    }
+
+    // Handling asynchronous data for both expenses and incomes
+    return expenses.when(
+      data: (expensesData) => incomes.when(
+        data: (incomesData) {
+          // Both expensesData and incomesData are now available and can be used
+          final last7DaysMap = getIncomesExpensesMap(expensesData, incomesData);
+          double fullSum = last7DaysMap.values.fold(0.0,
+              (sum, values) => sum + values["Incomes"]! + values["Expenses"]!);
+
+          if (fullSum > 0) {
+            return generateMainContent(last7DaysMap);
+          } else {
+            return Text(AppLocalizations.of(context)!.noRecordsWeek,
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                    color: Theme.of(context).colorScheme.secondary,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16));
+          }
+        },
+        loading: () => const Center(
+          child: CircularProgressIndicator(),
+        ),
+        error: (error, stack) => Text('Error loading incomes: $error'),
+      ),
+      loading: () => const Center(
+        child: CircularProgressIndicator(),
+      ),
+      error: (error, stack) => Text('Error loading expenses: $error'),
+    );
   }
 }
 

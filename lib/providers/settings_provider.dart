@@ -19,22 +19,19 @@ Future<void> _loadSettings() async {
     Map<String, dynamic> jsonData = json.decode(contents);
     Map<String, bool> settingsMap = {};
 
-    // Convert and validate jsonData to ensure all values are bool
     jsonData.forEach((key, value) {
       if (value is bool) {
         settingsMap[key] = value;
       } else {
-        // Optionally handle incorrect types, e.g., log an error or assign a default value
-        // Assuming default values here for non-bool types
-        settingsMap[key] = false;  // Or true, depending on your default logic
+        settingsMap[key] = false;  
       }
     });
 
     state = settingsMap;
   } else {
     state = {
-      'isEnglish': true,  // Default value for 'isEnglish'
-      'isDarkMode': true, // Default value for 'isDarkMode'
+      'isEnglish': true, 
+      'isDarkMode': true, 
     };
   }
 }

@@ -10,12 +10,12 @@ class WalletsNotifier extends AsyncNotifier<List<Wallet>> {
   Future<List<Wallet>> build() async {
     database =
         await $FloorAppDatabase.databaseBuilder('expenses_database.db').build();
-    List<Wallet> wallets = await database.walletDao.findAllWallets();
+    List<Wallet> wallets = await database.walletDao.getAllWallets();
     return wallets;
   }
 
   Future<void> loadWallets() async {
-    List<Wallet> wallets = await database.walletDao.findAllWallets();
+    List<Wallet> wallets = await database.walletDao.getAllWallets();
     state = AsyncValue.data(wallets);
   }
 
@@ -29,9 +29,9 @@ class WalletsNotifier extends AsyncNotifier<List<Wallet>> {
   }
 
   Future<void> deleteItem(Wallet wallet) async {
-    await database.walletDao.deleteWallet(wallet);
     await database.walletDao.removeAllIncomes(wallet.id!);
     await database.walletDao.removeAllExpenses(wallet.id!);
+    await database.walletDao.deleteWallet(wallet);
     await loadWallets();
   }
 
@@ -45,6 +45,7 @@ class WalletsNotifier extends AsyncNotifier<List<Wallet>> {
     await database.walletDao.selectWallet(selectedWallet.id!);
     await loadWallets();
   }
+
 }
 
 final walletsProvider = AsyncNotifierProvider<WalletsNotifier, List<Wallet>>(

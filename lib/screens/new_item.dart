@@ -14,7 +14,7 @@ class NewItem extends ConsumerStatefulWidget {
   NewItem({super.key, required this.isExpense, this.item});
 
   final bool isExpense;
-  ItemModel? item;
+  final ItemModel? item;
 
   @override
   ConsumerState<NewItem> createState() {
@@ -25,7 +25,7 @@ class NewItem extends ConsumerStatefulWidget {
 class _NewExpenseState extends ConsumerState<NewItem> {
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
-  late NotifierProvider<ItemNotifier<ItemModel>, List<ItemModel>> provider;
+  late AsyncNotifierProvider<ItemNotifier<ItemModel>, List<ItemModel>> provider;
   DateTime? _selectedDate;
 
   late Enum _selectedItem = widget.isExpense
@@ -47,7 +47,7 @@ class _NewExpenseState extends ConsumerState<NewItem> {
   @override
   void initState() {
     provider = (widget.isExpense ? expensesProvider : incomesProvider)
-        as NotifierProvider<ItemNotifier<ItemModel>, List<ItemModel>>;
+        as AsyncNotifierProvider<ItemNotifier<ItemModel>, List<ItemModel>>;
     if (widget.item != null) {
       displayDataForEdit();
     }
@@ -224,7 +224,7 @@ class _NewExpenseState extends ConsumerState<NewItem> {
                           color: Theme.of(context).colorScheme.primary,
                         )),
                 prefixText: '\$ ',
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
               ),
             ),
           ),

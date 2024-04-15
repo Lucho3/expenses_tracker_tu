@@ -16,7 +16,7 @@ import 'package:expenses_tracker_tu/database/daos/wallet_dao.dart';
 part 'expenses_database.g.dart'; // The code generated file
 
 @TypeConverters([DateTimeConverter])
-@Database(version: 1, entities: [Wallet, Expense, Income])
+@Database(version: 3, entities: [Wallet, Expense, Income])
 abstract class AppDatabase extends FloorDatabase {
   WalletDao get walletDao;
   ExpenseDao get expenseDao;

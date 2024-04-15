@@ -1,4 +1,6 @@
 import 'package:expenses_tracker_tu/models/wallet.dart';
+import 'package:expenses_tracker_tu/providers/expenses_provider.dart';
+import 'package:expenses_tracker_tu/providers/incomes_provider.dart';
 import 'package:expenses_tracker_tu/providers/wallets_provider.dart';
 import 'package:expenses_tracker_tu/screens/new_wallet.dart';
 import 'package:flutter/material.dart';
@@ -58,6 +60,8 @@ Future<void> deleteWallet(BuildContext context, WidgetRef ref) async {
   );
 
   if (confirmed == true) {
+    await ref.read(expensesProvider.notifier).deleteItemByWalletId(item.id!);
+    await ref.read(incomesProvider.notifier).deleteItemByWalletId(item.id!);
     await ref.read(walletsProvider.notifier).deleteItem(item);
 
     var remainingWallets = ref.read(walletsProvider.notifier).items.value!;
@@ -88,7 +92,7 @@ Future<void> deleteWallet(BuildContext context, WidgetRef ref) async {
               fontWeight: FontWeight.bold,
               fontSize: 14),
         ),
-        SizedBox(width: 8.0),
+        const SizedBox(width: 8.0),
         Text(
           value,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
@@ -123,11 +127,11 @@ Future<void> deleteWallet(BuildContext context, WidgetRef ref) async {
                 children: [
                   buildAccountRow(
                       context,
-                      AppLocalizations.of(context)!.walletName + ':',
+                      '${AppLocalizations.of(context)!.walletName}:',
                       item.title),
                   buildAccountRow(
                       context,
-                      AppLocalizations.of(context)!.amount + ':',
+                      '${AppLocalizations.of(context)!.amount}:',
                       '\$${item.amount.toStringAsFixed(2)}'),
                   TextButton(
                     onPressed: () {
@@ -144,14 +148,14 @@ Future<void> deleteWallet(BuildContext context, WidgetRef ref) async {
                         ),
                       );
                     },
-                    child: Text(AppLocalizations.of(context)!.edit),
                     style: TextButton.styleFrom(
                       padding: EdgeInsets.zero,
-                      minimumSize: Size(50, 30),
+                      minimumSize: const Size(50, 30),
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       alignment: Alignment.centerLeft,
                       splashFactory: NoSplash.splashFactory,
                     ),
+                    child: Text(AppLocalizations.of(context)!.edit),
                   ),
                 ],
               ),

@@ -102,7 +102,7 @@ class CustomFAB extends ConsumerWidget {
           onTap: () {
             //TODO: async
             if(ref.read(walletsProvider.notifier).items.value!.length >= 2) {
-              _openAddItemOverlay(context, TransferMoney());
+              _openAddItemOverlay(context, const TransferMoney());
             }
             else {
               dialogShower(context, AppLocalizations.of(context)!.notEnoughWalletsTitle, AppLocalizations.of(context)!.notEnoughWallets);

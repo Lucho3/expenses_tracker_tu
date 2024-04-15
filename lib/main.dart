@@ -8,13 +8,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/services.dart';
+
+// import 'package:sqflite/sqflite.dart';
+// import 'package:path/path.dart';  // Import the path package
+
+// Future<void> dropDatabase() async {
+//     final dbFolder = await getDatabasesPath();
+//     final dbPath = join(dbFolder, 'expenses_database.db');
+//     await deleteDatabase(dbPath); // This deletes the database file
+// }
 
 ThemeData createTheme(bool isDark) {
   return ThemeData(
     useMaterial3: true,
     colorScheme: ColorScheme.fromSeed(
       brightness: isDark ? Brightness.dark : Brightness.light,
-      seedColor: Color.fromARGB(255, 117, 5, 173),
+      seedColor: const Color.fromARGB(255, 117, 5, 173),
     ),
     cardTheme: const CardTheme().copyWith(
         margin: const EdgeInsets.symmetric(
@@ -27,9 +37,13 @@ ThemeData createTheme(bool isDark) {
 }
 
 void main() {
-  runApp(const ProviderScope(
-    child: App(),
-  ));
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitDown,
+    DeviceOrientation.portraitUp,
+  ]).then((_) {
+    runApp(const ProviderScope(child: App()));
+  });
 }
 
 class App extends ConsumerWidget {
@@ -39,8 +53,9 @@ class App extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(settingsProvider);
 
-    final isEnglish = settings['isEnglish'] ?? true; 
-    final isDarkMode = settings['isDarkMode'] ?? false;
+    final isEnglish = settings['isEnglish'] ?? true;
+    // Check system theme mode
+    final isDarkMode = settings['isDarkMode'] ?? MediaQuery.of(context).platformBrightness == Brightness.dark;
 
     return MaterialApp(
       localizationsDelegates: const [

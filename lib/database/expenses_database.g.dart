@@ -73,7 +73,7 @@ class _$AppDatabase extends AppDatabase {
     Callback? callback,
   ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 1,
+      version: 2,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -165,7 +165,7 @@ class _$WalletDao extends WalletDao {
   final DeletionAdapter<Wallet> _walletDeletionAdapter;
 
   @override
-  Future<List<Wallet>> findAllWallets() async {
+  Future<List<Wallet>> getAllWallets() async {
     return _queryAdapter.queryList('SELECT * FROM wallets',
         mapper: (Map<String, Object?> row) => Wallet(
             id: row['id'] as int?,
@@ -282,9 +282,10 @@ class _$ExpenseDao extends ExpenseDao {
   final DeletionAdapter<Expense> _expenseDeletionAdapter;
 
   @override
-  Future<List<Expense>> findAllExpenses() async {
+  Future<List<Expense>> getAllExpenses() async {
     return _queryAdapter.queryList('SELECT * FROM expenses',
         mapper: (Map<String, Object?> row) => Expense(
+            id: row['id'] as int?,
             title: row['title'] as String,
             amount: row['amount'] as double,
             date: _dateTimeConverter.decode(row['date'] as int),
@@ -296,6 +297,7 @@ class _$ExpenseDao extends ExpenseDao {
   Future<Expense?> findExpenseById(int id) async {
     return _queryAdapter.query('SELECT * FROM expenses WHERE id = ?1',
         mapper: (Map<String, Object?> row) => Expense(
+            id: row['id'] as int?,
             title: row['title'] as String,
             amount: row['amount'] as double,
             date: _dateTimeConverter.decode(row['date'] as int),
@@ -308,6 +310,7 @@ class _$ExpenseDao extends ExpenseDao {
   Future<List<Expense>> findExpensesByWalletId(int walletId) async {
     return _queryAdapter.queryList('SELECT * FROM expenses WHERE walletId = ?1',
         mapper: (Map<String, Object?> row) => Expense(
+            id: row['id'] as int?,
             title: row['title'] as String,
             amount: row['amount'] as double,
             date: _dateTimeConverter.decode(row['date'] as int),
@@ -393,9 +396,10 @@ class _$IncomeDao extends IncomeDao {
   final DeletionAdapter<Income> _incomeDeletionAdapter;
 
   @override
-  Future<List<Income>> findAllIncomes() async {
+  Future<List<Income>> getAllIncomes() async {
     return _queryAdapter.queryList('SELECT * FROM incomes',
         mapper: (Map<String, Object?> row) => Income(
+            id: row['id'] as int?,
             title: row['title'] as String,
             amount: row['amount'] as double,
             date: _dateTimeConverter.decode(row['date'] as int),
@@ -407,6 +411,7 @@ class _$IncomeDao extends IncomeDao {
   Future<Income?> findIncomeById(int id) async {
     return _queryAdapter.query('SELECT * FROM incomes WHERE id = ?1',
         mapper: (Map<String, Object?> row) => Income(
+            id: row['id'] as int?,
             title: row['title'] as String,
             amount: row['amount'] as double,
             date: _dateTimeConverter.decode(row['date'] as int),
@@ -419,6 +424,7 @@ class _$IncomeDao extends IncomeDao {
   Future<List<Income>> findIncomesByWalletId(int walletId) async {
     return _queryAdapter.queryList('SELECT * FROM incomes WHERE walletId = ?1',
         mapper: (Map<String, Object?> row) => Income(
+            id: row['id'] as int?,
             title: row['title'] as String,
             amount: row['amount'] as double,
             date: _dateTimeConverter.decode(row['date'] as int),

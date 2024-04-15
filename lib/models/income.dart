@@ -25,6 +25,7 @@ class Income extends ItemModel {
   TypeIncome type;
 
   Income({
+    this.id,
     required super.title,
     required super.amount,
     required super.date,

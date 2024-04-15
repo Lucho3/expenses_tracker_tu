@@ -4,7 +4,6 @@ import 'package:expenses_tracker_tu/models/wallet.dart';
 import 'package:expenses_tracker_tu/providers/expenses_provider.dart';
 import 'package:expenses_tracker_tu/providers/incomes_provider.dart';
 import 'package:expenses_tracker_tu/providers/item_provider.dart';
-import 'package:expenses_tracker_tu/providers/settings_provider.dart';
 import 'package:expenses_tracker_tu/providers/wallets_provider.dart';
 import 'package:expenses_tracker_tu/widgets/items/items_list.dart';
 import 'package:expenses_tracker_tu/widgets/main_frame.dart';
@@ -24,7 +23,8 @@ class Items extends ConsumerStatefulWidget {
 }
 
 class _ExpensesState extends ConsumerState<Items> {
-  late final provider;
+  late final provider = (widget.isExpense ? expensesProvider : incomesProvider)
+      as AsyncNotifierProvider<ItemNotifier<ItemModel>, List<ItemModel>>;
 
   String get titleOfScreen {
     if (widget.isExpense) {
@@ -34,68 +34,74 @@ class _ExpensesState extends ConsumerState<Items> {
     }
   }
 
-  @override
-  void initState() {
-    provider = (widget.isExpense ? expensesProvider : incomesProvider)
-        as NotifierProvider<ItemNotifier<ItemModel>, List<ItemModel>>;
-    super.initState();
-  }
+  void _removeItem(ItemModel item) async {
+    await ref.read(provider.notifier).deleteItem(item);
 
-  void _removeItem(ItemModel item) {
-    ref.read(provider.notifier).deleteItem(item);
     final walletsP = ref.read(walletsProvider.notifier);
-    //TODO: async
-    final selectedWallet =
-        walletsP.items.value!.where((w) => w.isSelected == true).first;
-    double moneyToManipulate;
-    item is Expense
-        ? moneyToManipulate = item.amount * -1
-        : moneyToManipulate = item.amount;
+    List<Wallet> wallets = await ref.read(walletsProvider.future);
+    Wallet? selectedWallet = wallets.firstWhere((w) => w.isSelected);
+
+    if (selectedWallet == null) {
+      return;
+    }
+
+    double moneyToManipulate = item is Expense ? -item.amount : item.amount;
     selectedWallet.amount -= moneyToManipulate;
 
-    //TODO: this undo is problematic if we go to main screen anc click undo it doesnt work
+    await walletsP.editItem(selectedWallet);
+
     ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        duration: const Duration(seconds: 3),
-        content: Text(AppLocalizations.of(context)!.elementDel),
-        action: SnackBarAction(
-            label: AppLocalizations.of(context)!.undo,
-            onPressed: () {
-              ref.read(provider.notifier).addItem(item);
-              selectedWallet.amount += moneyToManipulate;
-            }),
-      ),
-    );
-    walletsP.editItem(selectedWallet);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      duration: const Duration(seconds: 3),
+      content: Text(AppLocalizations.of(context)!.elementDel),
+      action: SnackBarAction(
+          label: AppLocalizations.of(context)!.undo,
+          onPressed: () async {
+            await ref.read(provider.notifier).addItem(item);
+            selectedWallet.amount += moneyToManipulate;
+            await walletsP.editItem(selectedWallet);
+          }),
+    ));
   }
 
   @override
   Widget build(BuildContext context) {
-    final itemsProvider = ref.watch(provider);
-    ref.watch(settingsProvider);
+    final itemPr = ref.watch(provider);
+    final walletPr = ref.read(walletsProvider);
 
-    Widget mainContent = Center(
-      child: Text(
-        AppLocalizations.of(context)!.noElements,
-        style: Theme.of(context).textTheme.titleMedium!.copyWith(
-              color: Theme.of(context).colorScheme.primary,
-              fontWeight: FontWeight.bold,
-            ),
+    return walletPr.when(
+      data: (selectedWallet) => MainFrame(
+        title: titleOfScreen,
+        content: itemPr.when(
+          data: (items) => items.isNotEmpty && selectedWallet != null
+              ? ItemList(
+                  onRemoveItem: _removeItem,
+                  items: items
+                      .where((i) =>
+                          i.walletId ==
+                          selectedWallet
+                              .where((w) => w.isSelected == true)
+                              .first
+                              .id)
+                      .toList(),
+                )
+              : Center(
+                  child: Text(
+                    AppLocalizations.of(context)!.noElements,
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                ),
+          loading: () => const Center(
+            child: CircularProgressIndicator(),
+          ),
+          error: (error, _) => Text('Error loading items: $error'),
+        ),
       ),
-    );
-
-    //TODO: check for current wallet
-    if (itemsProvider.isNotEmpty) {
-      mainContent = ItemList(
-        onRemoveItem: _removeItem,
-        provider: provider,
-      );
-    }
-
-    return MainFrame(
-      title: titleOfScreen,
-      content: mainContent,
+      loading: () => const CircularProgressIndicator(),
+      error: (error, _) => Text('Error loading wallet: $error'),
     );
   }
 }

@@ -109,7 +109,7 @@ class MainDrawer extends StatelessWidget {
                 onOpenItem(context, true);
               }),
           const Spacer(),
-          SettingsContainer()
+          const SettingsContainer()
         ],
       ),
     );

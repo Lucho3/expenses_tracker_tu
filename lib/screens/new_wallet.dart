@@ -67,7 +67,7 @@ class _NewWalletState extends ConsumerState<NewWallet> {
   }
 
   bool evaluateInput(double? enteredAmount) {
-    final isAmountInvalid = enteredAmount == null || enteredAmount <= 0;
+    final isAmountInvalid = enteredAmount == null || enteredAmount < 0;
     if (_titleController.text.trim().isEmpty || isAmountInvalid) {
       dialogShower(AppLocalizations.of(context)!.alertTitle,
           AppLocalizations.of(context)!.alertContent);
@@ -88,7 +88,9 @@ class _NewWalletState extends ConsumerState<NewWallet> {
                   isSelected: isSelected));
               Navigator.pop(context);
             },
-            loading: () => const CircularProgressIndicator(),
+            loading: () => const Center(
+              child: CircularProgressIndicator(),
+            ),
             error: (error, stack) => Text('Error: $error'),
           );
     }
@@ -112,7 +114,7 @@ class _NewWalletState extends ConsumerState<NewWallet> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            padding: EdgeInsets.symmetric(vertical: 6),
+            padding: const EdgeInsets.symmetric(vertical: 6),
             width: MediaQuery.of(context).size.width * 0.9,
             child: Text(
               AppLocalizations.of(context)!.walletsDetails,
@@ -160,11 +162,11 @@ class _NewWalletState extends ConsumerState<NewWallet> {
                     color: Theme.of(context).colorScheme.primary,
                   )),
           prefixText: '\$ ',
-          border: OutlineInputBorder(),
+          border: const OutlineInputBorder(),
         ),
       ),
       Padding(
-        padding: EdgeInsets.only(top: 8.0),
+        padding: const EdgeInsets.only(top: 8.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [

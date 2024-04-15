@@ -4,7 +4,7 @@ import 'package:expenses_tracker_tu/models/wallet.dart';
 @dao
 abstract class WalletDao {
     @Query('SELECT * FROM wallets')
-    Future<List<Wallet>> findAllWallets();
+    Future<List<Wallet>> getAllWallets();
 
     @Query('SELECT * FROM wallets WHERE id = :id')
     Future<Wallet?> findWalletById(int id);

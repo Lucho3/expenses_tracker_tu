@@ -18,14 +18,14 @@ class _WalletsDisplayerState extends ConsumerState<WalletsDisplayer> {
   void _openWalletsScreen(BuildContext context) {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
-        builder: (context) => Wallets(),
+        builder: (context) => const Wallets(),
       ),
     );
   }
 
   Widget buildAccountRow(String label, String value) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 8.0),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Row(
@@ -37,7 +37,7 @@ class _WalletsDisplayerState extends ConsumerState<WalletsDisplayer> {
                   fontWeight: FontWeight.bold,
                   fontSize: 16),
             ),
-            SizedBox(width: 8.0),
+            const SizedBox(width: 8.0),
             Text(
               value,
               style: Theme.of(context).textTheme.titleMedium!.copyWith(
@@ -51,18 +51,18 @@ class _WalletsDisplayerState extends ConsumerState<WalletsDisplayer> {
     );
   }
 
-  List<Widget> rowBuilder(List<Wallet> provider) {
-    if (provider.isNotEmpty) {
+  List<Widget> rowBuilder(List<Wallet> walletList) {
+    if (walletList.isNotEmpty) {
       return [
         buildAccountRow('${AppLocalizations.of(context)!.walletName}:',
-            provider.where((w) => w.isSelected == true).first.title),
-        buildAccountRow(AppLocalizations.of(context)!.amount + ':',
-            '\$${provider.where((w) => w.isSelected == true).first.amount.toStringAsFixed(2)}')
+            walletList.where((w) => w.isSelected == true).first.title),
+        buildAccountRow('${AppLocalizations.of(context)!.amount}:',
+            '\$${walletList.where((w) => w.isSelected == true).first.amount.toStringAsFixed(2)}')
       ];
     }
     return [
       Container(
-        padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+        padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Row(
@@ -83,10 +83,9 @@ class _WalletsDisplayerState extends ConsumerState<WalletsDisplayer> {
   @override
   Widget build(BuildContext context) {
     final provider = ref.watch(walletsProvider);
-
     return Container(
       width: MediaQuery.of(context).size.width,
-      margin: EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.primaryContainer,
         borderRadius: BorderRadius.circular(20.0),
@@ -101,7 +100,7 @@ class _WalletsDisplayerState extends ConsumerState<WalletsDisplayer> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              padding: EdgeInsets.only(top: 8.0),
+              padding: const EdgeInsets.only(top: 8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -138,7 +137,9 @@ class _WalletsDisplayerState extends ConsumerState<WalletsDisplayer> {
             ),
             provider.when(
               data: (wallets) => Column(children: rowBuilder(wallets)),
-              loading: () => const CircularProgressIndicator(),
+              loading: () => const Center(
+                child: CircularProgressIndicator(),
+              ),
               error: (error, stack) => Text('Error: $error'),
             ),
           ],

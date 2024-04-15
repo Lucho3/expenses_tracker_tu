@@ -22,9 +22,9 @@ class MainFrame extends StatelessWidget {
               ),
         ),
       ),
-      drawer: MainDrawer(),
+      drawer: const MainDrawer(),
       body: content,
-      floatingActionButton: CustomFAB(),
+      floatingActionButton: const CustomFAB(),
     );
   }
 }

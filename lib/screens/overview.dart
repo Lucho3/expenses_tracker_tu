@@ -20,7 +20,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
     return Column(
       children: [
         //TODO: Those are unconstraint vertical should be fixed
-        WalletsDisplayer(),
+        const WalletsDisplayer(),
         ChartMainContainer(
           title: AppLocalizations.of(context)!.monthlySummary,
           content: MonthlyChart(),

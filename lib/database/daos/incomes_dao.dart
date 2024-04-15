@@ -4,7 +4,7 @@ import 'package:expenses_tracker_tu/models/income.dart';
 @dao
 abstract class IncomeDao {
   @Query('SELECT * FROM incomes')
-  Future<List<Income>> findAllIncomes();
+  Future<List<Income>> getAllIncomes();
 
   @Query('SELECT * FROM incomes WHERE id = :id')
   Future<Income?> findIncomeById(int id);
@@ -21,7 +21,6 @@ abstract class IncomeDao {
   @delete
   Future<void> deleteIncome(Income income);
 
-  // Method to delete all incomes associated with a specific wallet
   @Query('DELETE FROM incomes WHERE walletId = :walletId')
   Future<void> deleteIncomesByWalletId(int walletId);
 }

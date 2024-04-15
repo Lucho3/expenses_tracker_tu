@@ -9,12 +9,12 @@ class ExpensesNotifier extends ItemNotifier<Expense> {
   @override
   Future<List<Expense>> build() async {
     database = await $FloorAppDatabase.databaseBuilder('expenses_database.db').build();
-    List<Expense> expenses = await database.expenseDao.findAllExpenses();
+    List<Expense> expenses = await database.expenseDao.getAllExpenses();
     return expenses;
   }
 
   Future<void> loadExpenses() async {
-    List<Expense> expenses = await database.expenseDao.findAllExpenses();
+    List<Expense> expenses = await database.expenseDao.getAllExpenses();
     state = AsyncValue.data(expenses);
   }
 
@@ -22,19 +22,28 @@ class ExpensesNotifier extends ItemNotifier<Expense> {
   AsyncValue<List<Expense>> get items {
     return state;
   }
-
+  
+  @override
   Future<void> addItem(Expense expense) async {
     await database.expenseDao.insertExpense(expense);
     await loadExpenses();
   }
-
+  
+  @override
   Future<void> deleteItem(Expense expense) async {
     await database.expenseDao.deleteExpense(expense);
     await loadExpenses();
   }
-
-   Future<void> editItem(Expense expense) async {
+  
+  @override
+  Future<void> editItem(Expense expense) async {
     await database.expenseDao.updateExpense(expense);
+    await loadExpenses();
+  }
+  
+  @override
+  Future<void> deleteItemByWalletId(int walletId) async{
+    await database.expenseDao.deleteExpensesByWalletId(walletId);
     await loadExpenses();
   }
 

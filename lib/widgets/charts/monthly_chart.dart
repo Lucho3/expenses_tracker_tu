@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 
 class MonthlyChart extends ConsumerStatefulWidget {
   // ignore: prefer_const_constructors_in_immutables
-  MonthlyChart({Key? key}) : super(key: key);
+  MonthlyChart({super.key});
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -60,19 +60,19 @@ class _MyHomePageState extends ConsumerState<MonthlyChart> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(AppLocalizations.of(context)!.income + ":",
+                Text("${AppLocalizations.of(context)!.income}:",
                     textAlign: TextAlign.left,
                     style: Theme.of(context).textTheme.titleMedium!.copyWith(
                         color: Theme.of(context).colorScheme.secondary,
                         fontWeight: FontWeight.bold,
                         fontSize: 16)),
-                Text(AppLocalizations.of(context)!.expense + ":",
+                Text("${AppLocalizations.of(context)!.expense}:",
                     textAlign: TextAlign.left,
                     style: Theme.of(context).textTheme.titleMedium!.copyWith(
                         color: Theme.of(context).colorScheme.secondary,
                         fontWeight: FontWeight.bold,
                         fontSize: 16)),
-                Text(AppLocalizations.of(context)!.total + ":",
+                Text("${AppLocalizations.of(context)!.total}:",
                     textAlign: TextAlign.left,
                     style: Theme.of(context).textTheme.titleMedium!.copyWith(
                         color: Theme.of(context).colorScheme.secondary,
@@ -85,20 +85,20 @@ class _MyHomePageState extends ConsumerState<MonthlyChart> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(allIncome.toString() + '\$',
+                Text('$allIncome\$',
                     textAlign: TextAlign.left,
                     style: Theme.of(context).textTheme.titleMedium!.copyWith(
                         color:
                             Theme.of(context).colorScheme.onSecondaryContainer,
                         fontWeight: FontWeight.bold,
                         fontSize: 16)),
-                Text(allExpense.toString() + '\$',
+                Text('$allExpense\$',
                     textAlign: TextAlign.left,
                     style: Theme.of(context).textTheme.titleMedium!.copyWith(
                         color: Theme.of(context).colorScheme.error,
                         fontWeight: FontWeight.bold,
                         fontSize: 16)),
-                Text(total.toString() + '\$',
+                Text('$total\$',
                     textAlign: TextAlign.left,
                     style: Theme.of(context).textTheme.titleMedium!.copyWith(
                         color: total > 0
@@ -116,30 +116,47 @@ class _MyHomePageState extends ConsumerState<MonthlyChart> {
 
   @override
   Widget build(BuildContext context) {
-    final expenses = ref.watch(expensesProvider);
     final incomes = ref.watch(incomesProvider);
-    double sumIncomes = incomes
-        .where((w) => w.date.month == DateTime.now().month)
-        .fold(0, (previousValue, item) => previousValue + item.amount);
-    double sumExpenses = expenses
-        .where((w) => w.date.month == DateTime.now().month)
-        .fold(0, (previousValue, item) => previousValue + item.amount);
-    data = [
-      _ChartData(
-        'Income',
-        sumIncomes,
+    final expenses = ref.watch(expensesProvider);
+
+    return incomes.when(
+      data: (incomesData) => expenses.when(
+        data: (expensesData) {
+          double sumIncomes = incomesData
+              .where((income) => income.date.month == DateTime.now().month)
+              .fold(
+                  0, (previousValue, income) => previousValue + income.amount);
+
+          double sumExpenses = expensesData
+              .where((expense) => expense.date.month == DateTime.now().month)
+              .fold(0,
+                  (previousValue, expense) => previousValue + expense.amount);
+
+          List<_ChartData> data = [
+            _ChartData('Income', sumIncomes),
+            _ChartData('Expense', sumExpenses),
+          ];
+
+          return (sumExpenses == 0 && sumIncomes == 0)
+              ? Text(AppLocalizations.of(context)!.noRecordsMonth,
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                      color: Theme.of(context).colorScheme.secondary,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16))
+              : Wrap(
+                  children: [...getChartData(data)],
+                );
+        },
+        loading: () => const Center(
+          child: CircularProgressIndicator(),
+        ),
+        error: (error, stack) => Text('Error loading expenses: $error'),
       ),
-      _ChartData('Expense', sumExpenses),
-    ];
-    return (sumExpenses == 0 && sumIncomes == 0)
-        ? Text(AppLocalizations.of(context)!.noRecordsMonth,
-            style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                color: Theme.of(context).colorScheme.secondary,
-                fontWeight: FontWeight.bold,
-                fontSize: 16))
-        : Wrap(
-            children: [...getChartData(data)],
-          );
+      loading: () => const Center(
+        child: CircularProgressIndicator(),
+      ),
+      error: (error, stack) => Text('Error loading incomes: $error'),
+    );
   }
 }
 

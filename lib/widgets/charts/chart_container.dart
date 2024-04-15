@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ChartMainContainer extends StatelessWidget {
-  ChartMainContainer({Key? key, required this.content, required this.title}) : super(key: key);
+  const ChartMainContainer({super.key, required this.content, required this.title});
 
   final Widget content;
   final String title;
@@ -10,8 +10,8 @@ class ChartMainContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.all(8),
-      margin: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(8),
+      margin: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.primaryContainer,
         borderRadius: BorderRadius.circular(20.0),

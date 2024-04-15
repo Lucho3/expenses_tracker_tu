@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class TransferMoney extends ConsumerStatefulWidget {
-  TransferMoney({super.key});
+  const TransferMoney({super.key});
 
   @override
   ConsumerState<TransferMoney> createState() {
@@ -50,7 +50,8 @@ class _TransferMoneyState extends ConsumerState<TransferMoney> {
             ));
   }
 
-  DropdownMenu createCustomMenu(String label, bool isValueOne, List<Wallet> walletsList) {
+  DropdownMenu createCustomMenu(
+      String label, bool isValueOne, List<Wallet> walletsList) {
     List<Wallet> customWalletList = walletsList
         .where((w) => ![selectedWalletOne, selectedWalletTwo].contains(w))
         .toList();
@@ -116,21 +117,19 @@ class _TransferMoneyState extends ConsumerState<TransferMoney> {
   }
 
   void _saveTransfer() async {
-  final enteredAmount = double.tryParse(_amountController.text);
-  if (enteredAmount == null || enteredAmount <= 0) {
-    dialogShower(AppLocalizations.of(context)!.alertTitle,
-        AppLocalizations.of(context)!.alertContent);
-    return; // Exit if invalid amount
-  }
+    final enteredAmount = double.tryParse(_amountController.text);
+    if (enteredAmount == null || enteredAmount <= 0) {
+      dialogShower(AppLocalizations.of(context)!.alertTitle,
+          AppLocalizations.of(context)!.alertContent);
+      return;
+    }
 
-  if (selectedWalletOne!.amount < enteredAmount) {
-    dialogShower(AppLocalizations.of(context)!.notEnoughMoneyTitle,
-        AppLocalizations.of(context)!.notEnoughMoneyToTransfer);
-    return; // Exit if not enough funds
-  }
+    if (selectedWalletOne!.amount < enteredAmount) {
+      dialogShower(AppLocalizations.of(context)!.notEnoughMoneyTitle,
+          AppLocalizations.of(context)!.notEnoughMoneyToTransfer);
+      return;
+    }
 
-  try {
-    // Create a transaction-like logic in editItem or another method
     await ref.read(walletsProvider.notifier).editItem(selectedWalletOne!);
     await ref.read(walletsProvider.notifier).editItem(selectedWalletTwo!);
     ScaffoldMessenger.of(context).clearSnackBars();
@@ -142,10 +141,7 @@ class _TransferMoneyState extends ConsumerState<TransferMoney> {
     );
 
     Navigator.pop(context);
-  } catch (e) {
-    
   }
-}
 
   List<Widget> widgetsPortrait(List<Wallet> wallets) {
     return [
@@ -154,7 +150,7 @@ class _TransferMoneyState extends ConsumerState<TransferMoney> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            padding: EdgeInsets.symmetric(vertical: 6),
+            padding: const EdgeInsets.symmetric(vertical: 6),
             width: MediaQuery.of(context).size.width * 0.9,
             child: Text(
               AppLocalizations.of(context)!.moneyTransfer,
@@ -179,7 +175,7 @@ class _TransferMoneyState extends ConsumerState<TransferMoney> {
           child: createCustomMenu(
               AppLocalizations.of(context)!.chooseWalletOne, true, wallets)),
       Padding(
-          padding: EdgeInsets.symmetric(vertical: 4.0),
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
           child: createCustomMenu(
               AppLocalizations.of(context)!.chooseWalletTwo, false, wallets)),
       Padding(
@@ -196,7 +192,7 @@ class _TransferMoneyState extends ConsumerState<TransferMoney> {
                       color: Theme.of(context).colorScheme.primary,
                     )),
             prefixText: '\$ ',
-            border: OutlineInputBorder(),
+            border: const OutlineInputBorder(),
           ),
         ),
       ),
@@ -207,7 +203,7 @@ class _TransferMoneyState extends ConsumerState<TransferMoney> {
                     color: Theme.of(context).colorScheme.primary,
                   ))),
       Padding(
-        padding: EdgeInsets.only(top: 8.0),
+        padding: const EdgeInsets.only(top: 8.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -255,7 +251,9 @@ class _TransferMoneyState extends ConsumerState<TransferMoney> {
                   data: (wallets) => Column(children: [
                     ...widgetsPortrait(wallets)
                   ]), // Pass wallets to the function
-                  loading: () => CircularProgressIndicator(),
+                  loading: () => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
                   error: (e, stack) => Text('Error: $e'),
                 ),
               ],

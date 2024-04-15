@@ -29,6 +29,7 @@ class Expense extends ItemModel {
   CategoryExpense category;
 
   Expense({
+    this.id,
     required super.title,
     required super.amount,
     required super.date,
