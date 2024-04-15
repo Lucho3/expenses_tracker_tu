@@ -31,7 +31,6 @@ class IncomesNotifier extends ItemNotifier<Income> {
   
   @override
   Future<void> deleteItem(Income income) async {
-        income.id=1;
     await database.incomeDao.deleteIncome(income);
     await loadIncomes();
   }
