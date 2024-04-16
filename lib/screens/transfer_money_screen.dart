@@ -129,7 +129,9 @@ class _TransferMoneyState extends ConsumerState<TransferMoney> {
           AppLocalizations.of(context)!.notEnoughMoneyToTransfer);
       return;
     }
-
+    
+    selectedWalletOne!.amount -=enteredAmount;
+    selectedWalletTwo!.amount +=enteredAmount;
     await ref.read(walletsProvider.notifier).editItem(selectedWalletOne!);
     await ref.read(walletsProvider.notifier).editItem(selectedWalletTwo!);
     ScaffoldMessenger.of(context).clearSnackBars();
