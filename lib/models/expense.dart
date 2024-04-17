@@ -4,12 +4,6 @@ import 'package:expenses_tracker_tu/models/wallet.dart';
 import 'package:floor/floor.dart';
 import 'package:flutter/material.dart';
 
-enum CategoryExpense {
-  food,
-  travel,
-  leisure,
-  work,
-}
 
 const categoryIcon = {
   CategoryExpense.food: Icons.lunch_dining,
@@ -17,6 +11,13 @@ const categoryIcon = {
   CategoryExpense.leisure: Icons.movie,
   CategoryExpense.work: Icons.work,
 };
+
+enum CategoryExpense {
+  food,
+  travel,
+  leisure,
+  work,
+}
 
 @TypeConverters([DateTimeConverter])
 @Entity(tableName: 'expenses', foreignKeys: [

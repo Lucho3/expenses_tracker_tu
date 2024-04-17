@@ -1,4 +1,3 @@
-
 import 'package:expenses_tracker_tu/l10n/l10n.dart';
 import 'package:expenses_tracker_tu/providers/settings_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

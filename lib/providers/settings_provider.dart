@@ -3,7 +3,8 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 
-final settingsProvider = StateNotifierProvider<SettingsController, Map<String, bool>>((ref) {
+final settingsProvider =
+    StateNotifierProvider<SettingsController, Map<String, bool>>((ref) {
   return SettingsController();
 });
 
@@ -12,29 +13,29 @@ class SettingsController extends StateNotifier<Map<String, bool>> {
     ensureFileExists().then((_) => _loadSettings());
   }
 
-Future<void> _loadSettings() async {
-  final file = await _localFile;
-  if (await file.exists()) {
-    final contents = await file.readAsString();
-    Map<String, dynamic> jsonData = json.decode(contents);
-    Map<String, bool> settingsMap = {};
+  Future<void> _loadSettings() async {
+    final file = await _localFile;
+    if (await file.exists()) {
+      final contents = await file.readAsString();
+      Map<String, dynamic> jsonData = json.decode(contents);
+      Map<String, bool> settingsMap = {};
 
-    jsonData.forEach((key, value) {
-      if (value is bool) {
-        settingsMap[key] = value;
-      } else {
-        settingsMap[key] = false;  
-      }
-    });
+      jsonData.forEach((key, value) {
+        if (value is bool) {
+          settingsMap[key] = value;
+        } else {
+          settingsMap[key] = false;
+        }
+      });
 
-    state = settingsMap;
-  } else {
-    state = {
-      'isEnglish': true, 
-      'isDarkMode': true, 
-    };
+      state = settingsMap;
+    } else {
+      state = {
+        'isEnglish': true,
+        'isDarkMode': true,
+      };
+    }
   }
-}
 
   Future<File> get _localFile async {
     final directory = await getApplicationDocumentsDirectory();
@@ -57,11 +58,11 @@ Future<void> _loadSettings() async {
   Future<void> ensureFileExists() async {
     final file = await _localFile;
     if (!await file.exists()) {
-        await file.create();
-        await file.writeAsString(json.encode({
-          'isEnglish': true,
-          'isDarkMode': true,
-        })); 
+      await file.create();
+      await file.writeAsString(json.encode({
+        'isEnglish': true,
+        'isDarkMode': true,
+      }));
     }
-}
+  }
 }
